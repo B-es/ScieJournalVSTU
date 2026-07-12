@@ -17,7 +17,11 @@
   --color-error: #d21919;
   --color-border: #e1e5ea;
 
-  /* Article status colors — DS section 2, used only inside the status badge */
+  /* Article status colors — DS section 2, used only inside the status badge.
+     DS's table lists 6 (omits "Черновик"), but PRD section 5 has 7 statuses
+     and drafts must appear in "Мои статьи" (US-11) — added a neutral tone
+     for draft, distinct from the darker "submitted" grey. */
+  --color-status-draft: #9aa5b1;
   --color-status-submitted: #5b6672;
   --color-status-revision: #ffa200;
   --color-status-in-review: #1976d2;

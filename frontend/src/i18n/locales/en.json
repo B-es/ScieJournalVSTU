@@ -68,5 +68,64 @@
     "loading": "Loading…",
     "retry": "Retry",
     "error": "Failed to load data"
+  },
+  "articleStatus": {
+    "draft": "Draft",
+    "submitted": "Under review",
+    "needs_revision": "Needs revision",
+    "rejected": "Rejected",
+    "in_review": "In peer review",
+    "accepted": "Accepted for publication",
+    "published": "Published"
+  },
+  "articleForm": {
+    "steps": {
+      "metadata": "Metadata",
+      "files": "Files",
+      "review": "Review"
+    },
+    "titleRu": "Title (RU)",
+    "titleEn": "Title (EN)",
+    "abstractRu": "Abstract (RU)",
+    "abstractEn": "Abstract (EN)",
+    "keywordsRu": "Keywords (RU, comma-separated)",
+    "keywordsEn": "Keywords (EN, comma-separated)",
+    "topic": "Topic",
+    "authorsTitle": "Authors",
+    "authorFullName": "Full name",
+    "authorAffiliation": "Affiliation",
+    "authorEmail": "Email",
+    "addAuthor": "Add author",
+    "removeAuthor": "Remove",
+    "manuscriptFile": "Manuscript file",
+    "documentsTitle": "Supporting documents",
+    "documentType": "Document type",
+    "addDocument": "Add document",
+    "removeDocument": "Remove",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "savedDraft": "Draft saved",
+    "saving": "Saving…",
+    "reviewHint": "Review the data before submitting for review.",
+    "submitError": "Could not submit the article. Please check the filled-in fields."
+  },
+  "articlesTable": {
+    "title": "My Articles",
+    "submitButton": "Submit Article",
+    "filterAll": "All statuses",
+    "empty": "You haven't submitted any articles yet",
+    "emptyCta": "Submit your first article",
+    "columnTitle": "Title",
+    "columnStatus": "Status",
+    "columnDate": "Submitted",
+    "columnAction": "Action",
+    "open": "Open"
+  },
+  "articlePage": {
+    "statusHistory": "Status history",
+    "notFound": "Article not found",
+    "continueDraft": "Continue editing",
+    "readonlyNotice": "The article has been submitted for review — editing isn't available yet."
   }
 }

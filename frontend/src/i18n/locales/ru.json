@@ -68,5 +68,64 @@
     "loading": "Загрузка…",
     "retry": "Повторить",
     "error": "Не удалось загрузить данные"
+  },
+  "articleStatus": {
+    "draft": "Черновик",
+    "submitted": "На рассмотрении",
+    "needs_revision": "Требуется доработка",
+    "rejected": "Отклонена",
+    "in_review": "Рецензируется",
+    "accepted": "Принята к публикации",
+    "published": "Опубликована"
+  },
+  "articleForm": {
+    "steps": {
+      "metadata": "Метаданные",
+      "files": "Файлы",
+      "review": "Проверка"
+    },
+    "titleRu": "Название (RU)",
+    "titleEn": "Название (EN)",
+    "abstractRu": "Аннотация (RU)",
+    "abstractEn": "Аннотация (EN)",
+    "keywordsRu": "Ключевые слова (RU, через запятую)",
+    "keywordsEn": "Ключевые слова (EN, через запятую)",
+    "topic": "Направление",
+    "authorsTitle": "Авторы",
+    "authorFullName": "ФИО",
+    "authorAffiliation": "Место работы",
+    "authorEmail": "Email",
+    "addAuthor": "Добавить автора",
+    "removeAuthor": "Удалить",
+    "manuscriptFile": "Файл рукописи",
+    "documentsTitle": "Сопроводительные документы",
+    "documentType": "Тип документа",
+    "addDocument": "Добавить документ",
+    "removeDocument": "Удалить",
+    "back": "Назад",
+    "next": "Далее",
+    "submit": "Отправить",
+    "savedDraft": "Черновик сохранён",
+    "saving": "Сохранение…",
+    "reviewHint": "Проверьте данные перед отправкой на рассмотрение.",
+    "submitError": "Не удалось отправить статью. Проверьте заполненные поля."
+  },
+  "articlesTable": {
+    "title": "Мои статьи",
+    "submitButton": "Подать статью",
+    "filterAll": "Все статусы",
+    "empty": "Вы ещё не подавали статьи",
+    "emptyCta": "Подать первую статью",
+    "columnTitle": "Название",
+    "columnStatus": "Статус",
+    "columnDate": "Дата подачи",
+    "columnAction": "Действие",
+    "open": "Открыть"
+  },
+  "articlePage": {
+    "statusHistory": "История статусов",
+    "notFound": "Статья не найдена",
+    "continueDraft": "Продолжить заполнение",
+    "readonlyNotice": "Статья отправлена на рассмотрение — редактирование пока недоступно."
   }
 }
