@@ -1,0 +1,18 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<p>Будут возвращены на доработку (статус «Требуется доработка», автор получит уведомление с комментарием):</p>
+<ul>
+  {% for article in articles %}
+    <li>{{ article.title_ru }} — {{ article.submitted_by }}</li>
+  {% endfor %}
+</ul>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="hidden" name="action" value="return_for_revision_action">
+  <input type="submit" name="apply" value="Вернуть на доработку" class="default">
+  <a href="." class="button cancel-link">Отмена</a>
+</form>
+{% endblock %}
