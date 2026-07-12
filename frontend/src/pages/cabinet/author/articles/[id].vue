@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import * as articlesApi from "~/api/articles";
+import ArticleRevisionForm from "~/components/cabinet/ArticleRevisionForm.vue";
 import ArticleSubmitForm from "~/components/cabinet/ArticleSubmitForm.vue";
 import StatusBadge from "~/components/StatusBadge.vue";
 
@@ -13,6 +14,14 @@ const articleId = route.params.id as string;
 const detail = ref<articlesApi.ArticleDetailResponse | null>(null);
 const loading = ref(true);
 const error = ref("");
+
+const latestRevisionComment = computed(() => {
+  const decisions = detail.value?.decisions ?? [];
+  const returns = decisions
+    .filter((d) => d.stage === "completeness_check" && d.decision === "revise")
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  return returns[0]?.comment ?? "";
+});
 
 async function load() {
   loading.value = true;
@@ -45,7 +54,11 @@ onMounted(load);
       </section>
 
       <section v-else>
-        <p class="article-page__notice">{{ t("articlePage.readonlyNotice") }}</p>
+        <p v-if="detail.article.status === 'needs_revision' && latestRevisionComment" class="article-page__notice">
+          <strong>{{ t("articlePage.techEditorComment") }}:</strong> {{ latestRevisionComment }}
+        </p>
+        <p v-else class="article-page__notice">{{ t("articlePage.readonlyNotice") }}</p>
+
         <h3>{{ t("articlePage.statusHistory") }}</h3>
         <p><StatusBadge :status="(detail.article.status as any)" /></p>
 
@@ -59,6 +72,12 @@ onMounted(load);
           <dt>{{ t("articleForm.authorsTitle") }}</dt>
           <dd>{{ detail.article.authors.map((a) => a.fullName).join(", ") }}</dd>
         </dl>
+
+        <ArticleRevisionForm
+          v-if="detail.article.status === 'needs_revision'"
+          :article-id="articleId"
+          @uploaded="load"
+        />
       </section>
     </template>
   </div>
@@ -81,6 +100,7 @@ onMounted(load);
   grid-template-columns: max-content 1fr;
   gap: var(--spacing-sm) var(--spacing-md);
   margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
 }
 
 .article-page__summary dt {

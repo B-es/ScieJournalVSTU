@@ -58,6 +58,12 @@ class Article(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     last_autosaved_at = models.DateTimeField(null=True, blank=True)
+    # NULL = awaiting technical editor's completeness check (US-2 queue);
+    # set = passed, awaiting the chief editor's topic check (US-4 queue).
+    # Not a new Article.status value: PRD/DS treat the 7 statuses as a closed
+    # list tied to the status-badge's fixed colors, and "submitted" covers
+    # both sub-stages — see M3b plan decision #3.
+    completeness_approved_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         db_table = "articles"

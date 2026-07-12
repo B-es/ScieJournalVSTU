@@ -84,14 +84,45 @@ export interface ArticleDetail {
   createdAt: string;
   updatedAt: string;
   lastAutosavedAt: string | null;
+  completenessApprovedAt: string | null;
   authors: ArticleAuthor[];
+}
+
+export interface EditorialDecisionItem {
+  id: string;
+  editorId: string;
+  decision: "accept" | "reject" | "revise";
+  comment: string;
+  stage: "completeness_check" | "topic_check" | "review_decision";
+  createdAt: string;
 }
 
 export interface ArticleDetailResponse {
   article: ArticleDetail;
   versions: ArticleVersion[];
   reviews: unknown[];
-  decisions: unknown[];
+  decisions: EditorialDecisionItem[];
+}
+
+export interface RevisionUploadPayload {
+  manuscriptFile: File;
+  documents?: ArticleDocumentInput[];
+  authorComment?: string;
+}
+
+export interface RevisionUploadResponse {
+  versionId: string;
+  status: string;
+}
+
+export interface TopicCheckPayload {
+  approved: boolean;
+  comment?: string;
+}
+
+export interface ReviewerAssignmentPayload {
+  reviewerIds: string[];
+  deadline: string;
 }
 
 /**
@@ -144,4 +175,39 @@ export function listArticles(statusFilter?: string) {
 
 export function getArticle(articleId: string) {
   return apiFetch<ArticleDetailResponse>(`/articles/${articleId}`);
+}
+
+/**
+ * US-3: POST /api/articles/{id}/versions — files + author comment only, no
+ * metadata (TS section 7), unlike the draft/submit payload.
+ */
+export function uploadRevisionVersion(articleId: string, payload: RevisionUploadPayload) {
+  const form = new FormData();
+  form.append("manuscriptFile", payload.manuscriptFile);
+  if (payload.authorComment !== undefined) form.append("authorComment", payload.authorComment);
+  if (payload.documents?.length) {
+    const types: string[] = [];
+    for (const doc of payload.documents) {
+      form.append("documents", doc.file);
+      types.push(doc.docType);
+    }
+    form.append("documentTypes", JSON.stringify(types));
+  }
+  return apiFetch<RevisionUploadResponse>(`/articles/${articleId}/versions`, { method: "POST", body: form });
+}
+
+/** US-4: POST /api/articles/{id}/topic-check (chief editor). */
+export function topicCheck(articleId: string, payload: TopicCheckPayload) {
+  return apiFetch<{ status: string }>(`/articles/${articleId}/topic-check`, {
+    method: "POST",
+    body: payload,
+  });
+}
+
+/** US-4: POST /api/articles/{id}/reviewers (chief editor, >=2 reviewers). */
+export function assignReviewers(articleId: string, payload: ReviewerAssignmentPayload) {
+  return apiFetch<{ reviews: unknown[] }>(`/articles/${articleId}/reviewers`, {
+    method: "POST",
+    body: payload,
+  });
 }

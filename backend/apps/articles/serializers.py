@@ -109,6 +109,10 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
     createdAt = serializers.DateTimeField(source="created_at")
     updatedAt = serializers.DateTimeField(source="updated_at")
     lastAutosavedAt = serializers.DateTimeField(source="last_autosaved_at")
+    # Exposes the M3b/M3c queue-gating flag so the frontend can tell "awaiting
+    # completeness check" apart from "awaiting topic check" — both look like
+    # status=submitted with no reviews yet without this (see M3c plan #2).
+    completenessApprovedAt = serializers.DateTimeField(source="completeness_approved_at")
     authors = ArticleAuthorSerializer(many=True, read_only=True)
 
     class Meta:
@@ -128,6 +132,7 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
             "createdAt",
             "updatedAt",
             "lastAutosavedAt",
+            "completenessApprovedAt",
             "authors",
         ]
 
@@ -153,3 +158,43 @@ class ArticleDraftInputSerializer(serializers.Serializer):
     topic = serializers.CharField(required=False, allow_blank=True)
     authors = JSONStringField(required=False)
     manuscriptFile = serializers.FileField(required=False)
+
+
+class CompletenessCheckInputSerializer(serializers.Serializer):
+    """POST /api/articles/{id}/completeness-check (TS section 7, US-2)."""
+
+    approved = serializers.BooleanField()
+    comment = serializers.CharField(required=False, allow_blank=True, default="")
+
+    def validate(self, attrs):
+        if not attrs["approved"] and not attrs["comment"].strip():
+            raise serializers.ValidationError(
+                {"comment": ["Комментарий обязателен при возврате статьи на доработку."]}
+            )
+        return attrs
+
+
+class VersionUploadInputSerializer(serializers.Serializer):
+    """POST /api/articles/{id}/versions (TS section 7, US-3) — files + comment only, no metadata."""
+
+    manuscriptFile = serializers.FileField()
+    authorComment = serializers.CharField(required=False, allow_blank=True, default="")
+
+
+class TopicCheckInputSerializer(serializers.Serializer):
+    """POST /api/articles/{id}/topic-check (TS section 7, US-4)."""
+
+    approved = serializers.BooleanField()
+    comment = serializers.CharField(required=False, allow_blank=True, default="")
+
+    def validate(self, attrs):
+        if not attrs["approved"] and not attrs["comment"].strip():
+            raise serializers.ValidationError({"comment": ["Комментарий обязателен при отклонении статьи."]})
+        return attrs
+
+
+class ReviewerAssignmentInputSerializer(serializers.Serializer):
+    """POST /api/articles/{id}/reviewers (TS section 7, US-4) — at least 2 reviewers (PRD section 7)."""
+
+    reviewerIds = serializers.ListField(child=serializers.UUIDField(), min_length=2)
+    deadline = serializers.DateField()

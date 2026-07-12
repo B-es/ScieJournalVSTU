@@ -12,14 +12,22 @@ from apps.notifications.models import Notification
 from apps.users.models import Role, User
 from apps.users.permissions import HasRole
 
+from apps.reviews import services as review_services
+from apps.reviews.models import Review
+
+from . import services
 from .models import Article, ArticleAuthor, ArticleVersion
 from .serializers import (
     ArticleDetailSerializer,
     ArticleDraftInputSerializer,
     ArticleListSerializer,
     ArticleVersionSerializer,
+    CompletenessCheckInputSerializer,
     EditorialDecisionSerializer,
+    ReviewerAssignmentInputSerializer,
     ReviewSerializer,
+    TopicCheckInputSerializer,
+    VersionUploadInputSerializer,
 )
 from .validators import validate_manuscript_file
 
@@ -39,6 +47,23 @@ def _get_owned_article_or_404(article_id, user):
     if article.submitted_by_id != user.id:
         raise PermissionDenied("Эта статья вам не принадлежит.")
     return article
+
+
+def _get_visible_article_or_404(article_id, user):
+    """
+    Read access for GET /api/articles/{id} — broader than the author-only
+    write gate above (M3c plan decision #6): the submitting author, any
+    chief editor, or a reviewer who has *accepted* their invitation (PRD
+    section 7: full-text access opens only after explicit acceptance).
+    """
+    article = get_object_or_404(Article, pk=article_id)
+    if article.submitted_by_id == user.id:
+        return article
+    if user.roles.filter(code=Role.CHIEF_EDITOR).exists():
+        return article
+    if article.reviews.filter(reviewer=user, invitation_status=Review.ACCEPTED).exists():
+        return article
+    raise PermissionDenied("У вас нет доступа к этой статье.")
 
 
 def _apply_authors(article, authors_data):
@@ -204,13 +229,149 @@ class ArticleSubmitView(APIView):
         return Response({"articleId": str(article.id), "status": article.status})
 
 
+class ArticleCompletenessCheckView(APIView):
+    """
+    POST /api/articles/{id}/completeness-check — TS section 7 (US-2).
+    Human-facing workflow is Django Admin (see plan decision #1); this
+    endpoint exists because TS documents it explicitly and shares the same
+    apps.articles.services functions the admin actions use.
+    """
+
+    permission_classes = [HasRole(Role.TECH_EDITOR)]
+
+    def post(self, request, article_id):
+        article = get_object_or_404(Article, pk=article_id)
+        if article.status != Article.SUBMITTED or article.completeness_approved_at is not None:
+            return Response(
+                {"code": "not_in_queue", "message": "Статья не находится в очереди проверки комплектности."},
+                status=status.HTTP_409_CONFLICT,
+            )
+
+        input_serializer = CompletenessCheckInputSerializer(data=request.data)
+        input_serializer.is_valid(raise_exception=True)
+        validated = input_serializer.validated_data
+
+        if validated["approved"]:
+            services.approve_completeness(article, request.user)
+        else:
+            services.return_for_revision(article, request.user, validated["comment"])
+
+        return Response({"status": article.status})
+
+
+class ArticleVersionsView(APIView):
+    """POST /api/articles/{id}/versions — TS section 7 (US-3): files + author comment only, no metadata."""
+
+    permission_classes = [HasRole(Role.AUTHOR)]
+
+    def post(self, request, article_id):
+        article = _get_owned_article_or_404(article_id, request.user)
+        if article.status != Article.NEEDS_REVISION:
+            return Response(
+                {"code": "not_in_revision", "message": "Статья не находится на доработке."},
+                status=status.HTTP_409_CONFLICT,
+            )
+
+        input_serializer = VersionUploadInputSerializer(data=request.data)
+        input_serializer.is_valid(raise_exception=True)
+        validated = input_serializer.validated_data
+
+        try:
+            validate_manuscript_file(validated["manuscriptFile"])
+        except serializers.ValidationError as exc:
+            return Response(
+                {
+                    "code": "invalid_manuscript",
+                    "message": str(exc.detail[0]),
+                    "fieldErrors": {"manuscriptFile": [str(exc.detail[0])]},
+                },
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            )
+
+        doc_files = request.FILES.getlist("documents")
+        doc_types = _parse_document_types(request.data.get("documentTypes"))
+
+        version = services.add_revision_version(
+            article,
+            validated["manuscriptFile"],
+            doc_files,
+            doc_types,
+            validated["authorComment"],
+        )
+
+        return Response({"versionId": str(version.id), "status": article.status})
+
+
+class ArticleTopicCheckView(APIView):
+    """POST /api/articles/{id}/topic-check — TS section 7 (US-4)."""
+
+    permission_classes = [HasRole(Role.CHIEF_EDITOR)]
+
+    def post(self, request, article_id):
+        article = get_object_or_404(Article, pk=article_id)
+        if article.status != Article.SUBMITTED or article.completeness_approved_at is None or article.reviews.exists():
+            return Response(
+                {"code": "not_in_queue", "message": "Статья не находится в очереди проверки тематики."},
+                status=status.HTTP_409_CONFLICT,
+            )
+
+        input_serializer = TopicCheckInputSerializer(data=request.data)
+        input_serializer.is_valid(raise_exception=True)
+        validated = input_serializer.validated_data
+
+        if validated["approved"]:
+            services.approve_topic(article, request.user)
+        else:
+            services.reject_topic(article, request.user, validated["comment"])
+
+        return Response({"status": article.status})
+
+
+class ArticleReviewersView(APIView):
+    """POST /api/articles/{id}/reviewers — TS section 7 (US-4)."""
+
+    permission_classes = [HasRole(Role.CHIEF_EDITOR)]
+
+    def post(self, request, article_id):
+        article = get_object_or_404(Article, pk=article_id)
+        if article.status != Article.SUBMITTED or article.completeness_approved_at is None or article.reviews.exists():
+            return Response(
+                {"code": "not_in_queue", "message": "Статья не находится в очереди проверки тематики."},
+                status=status.HTTP_409_CONFLICT,
+            )
+
+        input_serializer = ReviewerAssignmentInputSerializer(data=request.data)
+        input_serializer.is_valid(raise_exception=True)
+        validated = input_serializer.validated_data
+
+        try:
+            reviews = review_services.assign_reviewers(
+                article, request.user, validated["reviewerIds"], validated["deadline"]
+            )
+        except ValueError as exc:
+            return Response(
+                {"code": "invalid_reviewers", "message": str(exc), "fieldErrors": {"reviewerIds": [str(exc)]}},
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            )
+
+        return Response({"reviews": ReviewSerializer(reviews, many=True).data})
+
+
 class ArticleListView(APIView):
-    """GET /api/articles — TS section 7. Own articles only (including drafts), optional ?status= filter."""
+    """
+    GET /api/articles — TS section 7. Own articles for authors; chief
+    editors see all articles instead (M3c plan decision #6 — needed for
+    their "Управление статьями" screen). Optional ?status= filter throughout.
+    """
 
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        qs = Article.objects.filter(submitted_by=request.user)
+        if request.user.roles.filter(code=Role.CHIEF_EDITOR).exists():
+            qs = Article.objects.all()
+        else:
+            qs = Article.objects.filter(submitted_by=request.user)
+
         status_filter = request.query_params.get("status")
         if status_filter:
             qs = qs.filter(status=status_filter)
@@ -223,7 +384,7 @@ class ArticleDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, article_id):
-        article = _get_owned_article_or_404(article_id, request.user)
+        article = _get_visible_article_or_404(article_id, request.user)
         return Response(
             {
                 "article": ArticleDetailSerializer(article).data,

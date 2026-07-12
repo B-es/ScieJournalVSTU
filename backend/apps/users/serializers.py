@@ -56,3 +56,13 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "email", "full_name", "affiliation", "orcid", "language_pref", "roles"]
+
+
+class ReviewerCandidateSerializer(serializers.ModelSerializer):
+    """GET /api/users/reviewers — picker source for the chief editor's reviewer-assignment form (M3c plan decision #5)."""
+
+    fullName = serializers.CharField(source="full_name")
+
+    class Meta:
+        model = User
+        fields = ["id", "fullName", "email"]

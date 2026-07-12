@@ -126,6 +126,51 @@
     "statusHistory": "Status history",
     "notFound": "Article not found",
     "continueDraft": "Continue editing",
-    "readonlyNotice": "The article has been submitted for review — editing isn't available yet."
+    "readonlyNotice": "The article has been submitted for review — editing isn't available yet.",
+    "techEditorComment": "Technical editor's comment"
+  },
+  "articleRevision": {
+    "title": "Upload a corrected version",
+    "authorComment": "Comment (response to the remarks)",
+    "submit": "Submit corrected version",
+    "error": "Could not upload the corrected version."
+  },
+  "invitation": {
+    "deadline": "Response deadline",
+    "daysLeft": "{n} day(s) left",
+    "overdue": "Overdue",
+    "accept": "Accept",
+    "decline": "Decline",
+    "error": "Could not send the response to the invitation.",
+    "status": {
+      "invited": "Awaiting response",
+      "accepted": "Accepted",
+      "declined": "Declined"
+    }
+  },
+  "topicCheck": {
+    "title": "Topic check",
+    "approveAndAssign": "Fits the scope — assign reviewers",
+    "reject": "Reject",
+    "comment": "Comment",
+    "commentRequired": "A comment is required when rejecting",
+    "reviewersTitle": "Reviewers (at least 2)",
+    "reviewersMinError": "Select at least two reviewers",
+    "deadline": "Review deadline",
+    "submit": "Assign reviewers",
+    "success": "Reviewers assigned",
+    "error": "Could not complete the action."
+  },
+  "chiefEditor": {
+    "articlesQueueTitle": "Topic check",
+    "articlesQueueEmpty": "No articles awaiting a topic check",
+    "invitationsTitle": "Sent invitations",
+    "invitationsEmpty": "No invitations have been sent yet"
+  },
+  "reviewerCabinet": {
+    "invitationsTitle": "Invitations",
+    "invitationsEmpty": "No new invitations yet",
+    "articlesTitle": "Articles to review",
+    "articlesEmpty": "No accepted articles to review yet"
   }
 }

@@ -3,7 +3,7 @@ const props = withDefaults(
   defineProps<{
     modelValue: string;
     label: string;
-    type?: "text" | "email" | "password";
+    type?: "text" | "email" | "password" | "textarea" | "date";
     error?: string;
     required?: boolean;
     autocomplete?: string;
@@ -23,7 +23,19 @@ const errorId = `${fieldId}-error`;
       {{ label }}
       <span v-if="required" class="form-field__required">— обязательное поле</span>
     </label>
+    <textarea
+      v-if="props.type === 'textarea'"
+      :id="fieldId"
+      :value="props.modelValue"
+      :required="props.required"
+      class="form-field__input form-field__input--textarea"
+      :class="{ 'form-field__input--error': !!props.error }"
+      :aria-invalid="!!props.error"
+      :aria-describedby="props.error ? errorId : undefined"
+      @input="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
+    />
     <input
+      v-else
       :id="fieldId"
       :type="props.type"
       :value="props.modelValue"
@@ -70,6 +82,13 @@ const errorId = `${fieldId}-error`;
 .form-field__input:focus {
   outline: none;
   border-color: var(--color-primary);
+}
+
+.form-field__input--textarea {
+  height: auto;
+  min-height: 96px;
+  padding: var(--spacing-sm);
+  resize: vertical;
 }
 
 .form-field__input--error {

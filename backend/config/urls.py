@@ -7,10 +7,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from apps.users.views import ReviewersListView
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/auth/", include("apps.users.urls")),
+    path("api/users/reviewers", ReviewersListView.as_view(), name="users-reviewers"),
     path("api/articles/", include("apps.articles.urls")),
+    path("api/reviews/", include("apps.reviews.urls")),
 ]
 
 if settings.DEBUG:

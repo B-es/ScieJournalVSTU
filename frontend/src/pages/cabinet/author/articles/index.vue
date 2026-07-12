@@ -36,6 +36,7 @@ onMounted(load);
       :items="items"
       :loading="loading"
       :error="error"
+      :status-filter="statusFilter"
       @retry="load"
       @update:status-filter="statusFilter = $event"
     />

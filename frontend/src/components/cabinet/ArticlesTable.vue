@@ -2,13 +2,19 @@
 import type { ArticleListItem } from "~/api/articles";
 import StatusBadge from "~/components/StatusBadge.vue";
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     items: ArticleListItem[];
     loading?: boolean;
     error?: string;
+    /** DS section 4 "Таблица статей" has role variants — author gets a submit CTA, others don't. */
+    showSubmitAction?: boolean;
+    /** Base path for the "Открыть" link, since each role has its own article detail route. */
+    detailBasePath?: string;
+    /** Controls the filter <select> so it reflects the caller's actual active filter. */
+    statusFilter?: string;
   }>(),
-  { loading: false, error: "" },
+  { loading: false, error: "", showSubmitAction: true, detailBasePath: "/cabinet/author/articles", statusFilter: "" },
 );
 
 const emit = defineEmits<{ retry: []; "update:statusFilter": [value: string] }>();
@@ -25,11 +31,17 @@ function formatDate(iso: string) {
 <template>
   <div class="articles-table">
     <div class="articles-table__toolbar">
-      <select class="articles-table__filter" @change="emit('update:statusFilter', ($event.target as HTMLSelectElement).value)">
+      <select
+        class="articles-table__filter"
+        :value="props.statusFilter"
+        @change="emit('update:statusFilter', ($event.target as HTMLSelectElement).value)"
+      >
         <option value="">{{ t("articlesTable.filterAll") }}</option>
         <option v-for="s in STATUS_OPTIONS" :key="s" :value="s">{{ t(`articleStatus.${s}`) }}</option>
       </select>
-      <NuxtLink to="/cabinet/author/submit" class="btn btn--primary">{{ t("articlesTable.submitButton") }}</NuxtLink>
+      <NuxtLink v-if="props.showSubmitAction" to="/cabinet/author/submit" class="btn btn--primary">
+        {{ t("articlesTable.submitButton") }}
+      </NuxtLink>
     </div>
 
     <p v-if="loading" class="articles-table__state">{{ t("common.loading") }}</p>
@@ -41,7 +53,9 @@ function formatDate(iso: string) {
 
     <div v-else-if="!items.length" class="articles-table__state">
       <p>{{ t("articlesTable.empty") }}</p>
-      <NuxtLink to="/cabinet/author/submit" class="btn btn--primary">{{ t("articlesTable.emptyCta") }}</NuxtLink>
+      <NuxtLink v-if="props.showSubmitAction" to="/cabinet/author/submit" class="btn btn--primary">
+        {{ t("articlesTable.emptyCta") }}
+      </NuxtLink>
     </div>
 
     <table v-else class="articles-table__table">
@@ -58,7 +72,7 @@ function formatDate(iso: string) {
           <td>{{ item.titleRu || item.titleEn || "—" }}</td>
           <td><StatusBadge :status="(item.status as any)" /></td>
           <td>{{ formatDate(item.createdAt) }}</td>
-          <td><NuxtLink :to="`/cabinet/author/articles/${item.id}`">{{ t("articlesTable.open") }}</NuxtLink></td>
+          <td><NuxtLink :to="`${props.detailBasePath}/${item.id}`">{{ t("articlesTable.open") }}</NuxtLink></td>
         </tr>
       </tbody>
     </table>

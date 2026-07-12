@@ -6,8 +6,15 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Role
-from .serializers import LoginSerializer, PasswordResetSerializer, RegisterSerializer, UserSerializer
+from .models import Role, User
+from .permissions import HasRole
+from .serializers import (
+    LoginSerializer,
+    PasswordResetSerializer,
+    RegisterSerializer,
+    ReviewerCandidateSerializer,
+    UserSerializer,
+)
 
 
 def _tokens_for_user(user):
@@ -83,3 +90,13 @@ class MeView(APIView):
 
     def get(self, request):
         return Response(UserSerializer(request.user).data)
+
+
+class ReviewersListView(APIView):
+    """GET /api/users/reviewers — candidate list for the chief editor's reviewer-assignment form (M3c plan decision #5)."""
+
+    permission_classes = [HasRole(Role.CHIEF_EDITOR)]
+
+    def get(self, request):
+        reviewers = User.objects.filter(roles__code=Role.REVIEWER).distinct().order_by("full_name")
+        return Response({"items": ReviewerCandidateSerializer(reviewers, many=True).data})
