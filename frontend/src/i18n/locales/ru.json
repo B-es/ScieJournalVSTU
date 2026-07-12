@@ -127,7 +127,10 @@
     "notFound": "Статья не найдена",
     "continueDraft": "Продолжить заполнение",
     "readonlyNotice": "Статья отправлена на рассмотрение — редактирование пока недоступно.",
-    "techEditorComment": "Комментарий технического редактора"
+    "techEditorComment": "Комментарий технического редактора",
+    "editorComment": "Комментарий главного редактора",
+    "rejectedNotice": "Статья отклонена.",
+    "acceptedNotice": "Статья принята к публикации."
   },
   "articleRevision": {
     "title": "Загрузить исправленную версию",
@@ -172,5 +175,52 @@
     "invitationsEmpty": "Новых приглашений пока нет",
     "articlesTitle": "Статьи на рецензию",
     "articlesEmpty": "Нет принятых статей на рецензирование"
+  },
+  "pdfViewer": {
+    "title": "Файл рукописи",
+    "confidential": "Конфиденциально — доступно только рецензенту и редакции",
+    "download": "Скачать PDF"
+  },
+  "reviewForm": {
+    "title": "Форма рецензии",
+    "recommendationLabel": "Рекомендация",
+    "recommendationPlaceholder": "Выберите рекомендацию",
+    "recommendation": {
+      "accept": "Принять",
+      "revise": "На доработку",
+      "reject": "Отклонить"
+    },
+    "commentsForAuthor": "Комментарии автору",
+    "commentsForEditor": "Комментарии редактору (конфиденциально)",
+    "reviewFile": "Файл рецензии (опционально)",
+    "submit": "Отправить рецензию",
+    "alreadySubmitted": "Рецензия отправлена. Рекомендация:",
+    "error": "Не удалось отправить рецензию."
+  },
+  "reviewPage": {
+    "notFound": "Рецензия не найдена"
+  },
+  "decisionForm": {
+    "title": "Принятие решения",
+    "waiting": "Ожидаем рецензию от {submitted} из {total} рецензентов",
+    "reviewsTitle": "Рецензии",
+    "recommendation": {
+      "accept": "Принять",
+      "revise": "На доработку",
+      "reject": "Отклонить"
+    },
+    "notSubmittedYet": "Рецензия ещё не подана",
+    "decisionLabel": "Решение",
+    "decisionPlaceholder": "Выберите решение",
+    "comment": "Комментарий (обязательно для любого решения)",
+    "submit": "Отправить решение",
+    "confirmRejectTitle": "Подтвердите отклонение статьи",
+    "confirmRejectBody": "Статья будет отклонена, автор получит уведомление с вашим комментарием.",
+    "confirmRejectButton": "Отклонить статью",
+    "cancel": "Отмена",
+    "error": "Не удалось отправить решение."
+  },
+  "reviewerFeedback": {
+    "title": "Отзывы рецензентов"
   }
 }

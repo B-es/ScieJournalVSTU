@@ -23,6 +23,7 @@ from .serializers import (
     ArticleListSerializer,
     ArticleVersionSerializer,
     CompletenessCheckInputSerializer,
+    DecisionInputSerializer,
     EditorialDecisionSerializer,
     ReviewerAssignmentInputSerializer,
     ReviewSerializer,
@@ -355,6 +356,26 @@ class ArticleReviewersView(APIView):
             )
 
         return Response({"reviews": ReviewSerializer(reviews, many=True).data})
+
+
+class ArticleDecisionView(APIView):
+    """POST /api/articles/{id}/decision — TS section 7 (US-7)."""
+
+    permission_classes = [HasRole(Role.CHIEF_EDITOR)]
+
+    def post(self, request, article_id):
+        article = get_object_or_404(Article, pk=article_id)
+
+        input_serializer = DecisionInputSerializer(data=request.data)
+        input_serializer.is_valid(raise_exception=True)
+        validated = input_serializer.validated_data
+
+        try:
+            services.make_review_decision(article, request.user, validated["decision"], validated["comment"])
+        except ValueError as exc:
+            return Response({"code": "not_ready", "message": str(exc)}, status=status.HTTP_409_CONFLICT)
+
+        return Response({"status": article.status})
 
 
 class ArticleListView(APIView):

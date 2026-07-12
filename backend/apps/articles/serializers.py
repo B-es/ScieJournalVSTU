@@ -59,15 +59,25 @@ class ArticleVersionSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    """Minimal — the review module itself doesn't exist yet, this just fills the {reviews: [...]} slot in TS's detail response."""
+    """Fills the {reviews: [...]} slot in TS's article-detail response."""
 
     reviewerId = serializers.UUIDField(source="reviewer_id")
     invitationStatus = serializers.CharField(source="invitation_status")
     submittedAt = serializers.DateTimeField(source="submitted_at")
+    # Only this sub-field of review_form_data — never commentsForEditor, and
+    # no reviewer identity beyond the opaque id above (PRD section 7: reviews
+    # are shown to the author "без раскрытия личности рецензента") — M3e plan
+    # decision #5.
+    commentsForAuthor = serializers.SerializerMethodField()
 
     class Meta:
         model = Review
-        fields = ["id", "reviewerId", "invitationStatus", "deadline", "recommendation", "submittedAt"]
+        fields = ["id", "reviewerId", "invitationStatus", "deadline", "recommendation", "submittedAt", "commentsForAuthor"]
+
+    def get_commentsForAuthor(self, obj):
+        if not obj.review_form_data:
+            return ""
+        return obj.review_form_data.get("commentsForAuthor", "")
 
 
 class EditorialDecisionSerializer(serializers.ModelSerializer):
@@ -198,3 +208,21 @@ class ReviewerAssignmentInputSerializer(serializers.Serializer):
 
     reviewerIds = serializers.ListField(child=serializers.UUIDField(), min_length=2)
     deadline = serializers.DateField()
+
+
+class DecisionInputSerializer(serializers.Serializer):
+    """
+    POST /api/articles/{id}/decision (TS section 7, US-7). Unlike
+    topic-check/completeness-check, the comment is mandatory for every
+    outcome here — US-7's own wording ("выбирает решение... и указывает
+    комментарий") and PRD section 7's general rule both tie the comment to
+    "any" chief editor decision, not just the negative one (M3e plan #2).
+    """
+
+    decision = serializers.ChoiceField(choices=EditorialDecision.DECISION_CHOICES)
+    comment = serializers.CharField()
+
+    def validate_comment(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("Комментарий обязателен для любого решения.")
+        return value

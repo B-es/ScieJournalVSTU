@@ -127,7 +127,10 @@
     "notFound": "Article not found",
     "continueDraft": "Continue editing",
     "readonlyNotice": "The article has been submitted for review — editing isn't available yet.",
-    "techEditorComment": "Technical editor's comment"
+    "techEditorComment": "Technical editor's comment",
+    "editorComment": "Chief editor's comment",
+    "rejectedNotice": "The article has been rejected.",
+    "acceptedNotice": "The article has been accepted for publication."
   },
   "articleRevision": {
     "title": "Upload a corrected version",
@@ -172,5 +175,52 @@
     "invitationsEmpty": "No new invitations yet",
     "articlesTitle": "Articles to review",
     "articlesEmpty": "No accepted articles to review yet"
+  },
+  "pdfViewer": {
+    "title": "Manuscript file",
+    "confidential": "Confidential — visible only to the reviewer and the editorial board",
+    "download": "Download PDF"
+  },
+  "reviewForm": {
+    "title": "Review form",
+    "recommendationLabel": "Recommendation",
+    "recommendationPlaceholder": "Select a recommendation",
+    "recommendation": {
+      "accept": "Accept",
+      "revise": "Needs revision",
+      "reject": "Reject"
+    },
+    "commentsForAuthor": "Comments for the author",
+    "commentsForEditor": "Comments for the editor (confidential)",
+    "reviewFile": "Review file (optional)",
+    "submit": "Submit review",
+    "alreadySubmitted": "Review submitted. Recommendation:",
+    "error": "Could not submit the review."
+  },
+  "reviewPage": {
+    "notFound": "Review not found"
+  },
+  "decisionForm": {
+    "title": "Editorial decision",
+    "waiting": "Waiting for {submitted} of {total} reviews",
+    "reviewsTitle": "Reviews",
+    "recommendation": {
+      "accept": "Accept",
+      "revise": "Needs revision",
+      "reject": "Reject"
+    },
+    "notSubmittedYet": "Review not submitted yet",
+    "decisionLabel": "Decision",
+    "decisionPlaceholder": "Select a decision",
+    "comment": "Comment (required for any decision)",
+    "submit": "Submit decision",
+    "confirmRejectTitle": "Confirm rejecting the article",
+    "confirmRejectBody": "The article will be rejected and the author will be notified with your comment.",
+    "confirmRejectButton": "Reject article",
+    "cancel": "Cancel",
+    "error": "Could not submit the decision."
+  },
+  "reviewerFeedback": {
+    "title": "Reviewer feedback"
   }
 }

@@ -41,7 +41,10 @@ onMounted(load);
 
     <ul v-else class="accepted-list">
       <li v-for="item in acceptedItems" :key="item.id">
-        <strong>{{ item.article.titleRu }}</strong> — {{ item.article.topic }} ({{ t("topicCheck.deadline") }}: {{ item.deadline }})
+        <NuxtLink :to="`/cabinet/reviewer/reviews/${item.id}`">
+          <strong>{{ item.article.titleRu }}</strong> — {{ item.article.topic }} ({{ t("topicCheck.deadline") }}: {{ item.deadline }})
+          <span v-if="item.submittedAt"> — {{ t("reviewForm.alreadySubmitted") }}</span>
+        </NuxtLink>
       </li>
     </ul>
   </div>

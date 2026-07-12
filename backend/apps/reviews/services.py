@@ -1,6 +1,7 @@
-"""Business logic for the reviewer-assignment and response flow (US-4, US-5)."""
+"""Business logic for the reviewer-assignment, response, and review-submission flow (US-4, US-5, US-6)."""
 
 from django.db import transaction
+from django.utils import timezone
 
 from apps.articles.models import Article
 from apps.notifications.models import Notification
@@ -102,4 +103,39 @@ def reassign_reviewer(review: Review, new_reviewer_id, deadline, editor) -> Revi
         type=Notification.REVIEWER_INVITED,
         message=f"Приглашение на рецензирование статьи «{article.title_ru}» (срок: {deadline}).",
     )
+    return review
+
+
+def submit_review(review: Review, user, recommendation: str, form_data: dict, review_file) -> Review:
+    """
+    US-6: submit the review. Doesn't change Article.status — that only
+    happens with the chief editor's final decision (US-7, not built yet).
+    Once every accepted reviewer has submitted, notify the chief editors
+    (PRD section 7 acceptance criteria for US-6).
+    """
+    if review.reviewer_id != user.id:
+        raise PermissionError("Эта рецензия адресована другому пользователю.")
+    if review.invitation_status != Review.ACCEPTED:
+        raise ValueError("Рецензию можно отправить только после принятия приглашения.")
+    if review.submitted_at is not None:
+        raise ValueError("Рецензия уже была отправлена.")
+
+    review.recommendation = recommendation
+    review.review_form_data = form_data
+    if review_file is not None:
+        review.review_file = review_file
+    review.submitted_at = timezone.now()
+    review.save(update_fields=["recommendation", "review_form_data", "review_file", "submitted_at"])
+
+    article = review.article
+    all_submitted = not article.reviews.filter(invitation_status=Review.ACCEPTED, submitted_at__isnull=True).exists()
+    if all_submitted:
+        for chief_editor in User.objects.filter(roles__code=Role.CHIEF_EDITOR).distinct():
+            Notification.objects.create(
+                user=chief_editor,
+                article=article,
+                type=Notification.STATUS_CHANGED,
+                message=f"Все рецензии по статье «{article.title_ru}» получены — можно принимать решение.",
+            )
+
     return review

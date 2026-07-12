@@ -9,7 +9,12 @@ from apps.users.permissions import HasRole
 
 from . import services
 from .models import Review
-from .serializers import ReassignInputSerializer, ReviewListItemSerializer, ReviewRespondInputSerializer
+from .serializers import (
+    ReassignInputSerializer,
+    ReviewListItemSerializer,
+    ReviewRespondInputSerializer,
+    ReviewSubmitInputSerializer,
+)
 
 
 class MyReviewsView(APIView):
@@ -74,3 +79,31 @@ class ReassignView(APIView):
             return Response({"code": "invalid_reassignment", "message": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"reviewId": str(review.id), "status": review.invitation_status})
+
+
+class SubmitReviewView(APIView):
+    """POST /api/reviews/{id}/submit — TS section 7 (US-6)."""
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, review_id):
+        review = get_object_or_404(Review, pk=review_id)
+
+        input_serializer = ReviewSubmitInputSerializer(data=request.data)
+        input_serializer.is_valid(raise_exception=True)
+        validated = input_serializer.validated_data
+
+        try:
+            services.submit_review(
+                review,
+                request.user,
+                validated["recommendation"],
+                validated["formData"],
+                validated.get("reviewFile"),
+            )
+        except PermissionError as exc:
+            return Response({"code": "forbidden", "message": str(exc)}, status=status.HTTP_403_FORBIDDEN)
+        except ValueError as exc:
+            return Response({"code": "invalid_state", "message": str(exc)}, status=status.HTTP_409_CONFLICT)
+
+        return Response({"status": "submitted"})

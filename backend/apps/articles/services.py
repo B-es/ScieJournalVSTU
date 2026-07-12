@@ -10,6 +10,8 @@ from django.utils import timezone
 
 from apps.editorial.models import EditorialDecision
 from apps.notifications.models import Notification
+from apps.reviews.models import Review
+from apps.users.models import Role, User
 
 from .models import Article, ArticleVersion
 
@@ -92,6 +94,43 @@ def reject_topic(article: Article, editor, comment: str) -> Article:
     return article
 
 
+def make_review_decision(article: Article, editor, decision: str, comment: str) -> Article:
+    """
+    US-7: final decision once every accepted reviewer has submitted. Comment
+    is mandatory for all three outcomes here (see DecisionInputSerializer).
+    """
+    if article.status != Article.IN_REVIEW:
+        raise ValueError("Статья не находится на этапе рецензирования.")
+    if article.reviews.filter(invitation_status=Review.ACCEPTED, submitted_at__isnull=True).exists():
+        raise ValueError("Ещё не все рецензии получены.")
+
+    status_by_decision = {
+        EditorialDecision.ACCEPT: Article.ACCEPTED,
+        EditorialDecision.REJECT: Article.REJECTED,
+        EditorialDecision.REVISE: Article.NEEDS_REVISION,
+    }
+    article.status = status_by_decision[decision]
+    article.save(update_fields=["status"])
+
+    EditorialDecision.objects.create(
+        article=article,
+        editor=editor,
+        decision=decision,
+        stage=EditorialDecision.REVIEW_DECISION,
+        comment=comment,
+    )
+    Notification.objects.create(
+        user=article.submitted_by,
+        article=article,
+        type=Notification.DECISION_MADE,
+        message=(
+            f"Решение по статье «{article.title_ru}»: {comment}. "
+            "Комментарии рецензентов доступны на странице статьи."
+        ),
+    )
+    return article
+
+
 def add_revision_version(
     article: Article,
     manuscript_file,
@@ -99,7 +138,7 @@ def add_revision_version(
     document_types,
     author_comment: str,
 ) -> ArticleVersion:
-    """US-3: author uploads a corrected version after a completeness-check return."""
+    """US-3/US-7 revise outcome: author uploads a corrected version after being sent back for revision."""
     next_number = (article.versions.aggregate(Max("version_number"))["version_number__max"] or 0) + 1
     version = ArticleVersion.objects.create(
         article=article,
@@ -112,12 +151,30 @@ def add_revision_version(
         version.documents.create(doc_type=doc_type, file=file)
 
     # PRD section 7: a resubmitted revision returns to the stage it was sent
-    # back from. The only source of needs_revision right now is the
-    # completeness check, so this always goes back to the tech-editor queue.
-    # Once the review-decision revision cycle (US-7/8) exists, branch here on
-    # the most recent EditorialDecision's stage instead of hardcoding.
-    article.status = Article.SUBMITTED
-    article.completeness_approved_at = None
-    article.save(update_fields=["status", "completeness_approved_at"])
+    # back from — branch on the most recent "revise" EditorialDecision.
+    last_revise = article.decisions.filter(decision=EditorialDecision.REVISE).order_by("-created_at").first()
+
+    if last_revise and last_revise.stage == EditorialDecision.REVIEW_DECISION:
+        # US-8: sent back after peer review — old reviews no longer apply to
+        # the new version. Deleting rather than flagging them "superseded"
+        # (no such field on Review, and adding one now is more than closing
+        # US-7's revise outcome calls for — see M3e plan #4). The chief
+        # editor re-assigns reviewers, same or new, via the queue they
+        # already have (M3c) once this makes `article.reviews` empty again.
+        article.reviews.all().delete()
+        article.status = Article.SUBMITTED
+        article.save(update_fields=["status"])
+        for chief_editor in User.objects.filter(roles__code=Role.CHIEF_EDITOR).distinct():
+            Notification.objects.create(
+                user=chief_editor,
+                article=article,
+                type=Notification.STATUS_CHANGED,
+                message=f"Автор загрузил исправленную версию статьи «{article.title_ru}» — назначьте рецензентов заново.",
+            )
+    else:
+        # Default / completeness-check path (M3b): back to the tech-editor queue.
+        article.status = Article.SUBMITTED
+        article.completeness_approved_at = None
+        article.save(update_fields=["status", "completeness_approved_at"])
 
     return version

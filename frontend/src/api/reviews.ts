@@ -51,3 +51,23 @@ export function reassignReviewer(reviewId: string, newReviewerId: string, deadli
 export function listReviewerCandidates() {
   return apiFetch<{ items: ReviewerCandidate[] }>("/users/reviewers");
 }
+
+export interface ReviewFormData {
+  commentsForAuthor: string;
+  commentsForEditor?: string;
+}
+
+export interface SubmitReviewPayload {
+  recommendation: "accept" | "revise" | "reject";
+  formData: ReviewFormData;
+  reviewFile?: File;
+}
+
+/** US-6: POST /api/reviews/{id}/submit. */
+export function submitReview(reviewId: string, payload: SubmitReviewPayload) {
+  const form = new FormData();
+  form.append("recommendation", payload.recommendation);
+  form.append("formData", JSON.stringify(payload.formData));
+  if (payload.reviewFile) form.append("reviewFile", payload.reviewFile);
+  return apiFetch<{ status: string }>(`/reviews/${reviewId}/submit`, { method: "POST", body: form });
+}

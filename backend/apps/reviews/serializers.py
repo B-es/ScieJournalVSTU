@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from apps.articles.models import Article
+from apps.articles.serializers import JSONStringField
 
 from .models import Review
 
@@ -41,3 +42,22 @@ class ReassignInputSerializer(serializers.Serializer):
 
     newReviewerId = serializers.UUIDField()
     deadline = serializers.DateField()
+
+
+class ReviewSubmitInputSerializer(serializers.Serializer):
+    """
+    POST /api/reviews/{id}/submit (TS section 7, US-6). `formData` is the
+    reviewer's questionnaire — TS/DS only call it "анкета рецензента" without
+    a fixed schema, so it's two free-form fields (M3d plan decision #2):
+    commentsForAuthor (required — the actual substance of the review) and
+    commentsForEditor (optional, confidential).
+    """
+
+    recommendation = serializers.ChoiceField(choices=Review.RECOMMENDATION_CHOICES)
+    formData = JSONStringField()
+    reviewFile = serializers.FileField(required=False)
+
+    def validate_formData(self, value):
+        if not isinstance(value, dict) or not str(value.get("commentsForAuthor", "")).strip():
+            raise serializers.ValidationError("Заполните комментарии для автора.")
+        return value

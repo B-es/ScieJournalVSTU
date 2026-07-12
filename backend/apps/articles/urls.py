@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import (
     ArticleCompletenessCheckView,
+    ArticleDecisionView,
     ArticleDetailView,
     ArticleDraftView,
     ArticleListView,
@@ -24,4 +25,5 @@ urlpatterns = [
     ),
     path("<uuid:article_id>/topic-check", ArticleTopicCheckView.as_view(), name="article-topic-check"),
     path("<uuid:article_id>/reviewers", ArticleReviewersView.as_view(), name="article-reviewers"),
+    path("<uuid:article_id>/decision", ArticleDecisionView.as_view(), name="article-decision"),
 ]
