@@ -123,6 +123,16 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
     # completeness check" apart from "awaiting topic check" — both look like
     # status=submitted with no reviews yet without this (see M3c plan #2).
     completenessApprovedAt = serializers.DateTimeField(source="completeness_approved_at")
+    # US-9: set once the article is actually published — see plan decision #1
+    # for why this can't just be updated_at.
+    publishedAt = serializers.DateTimeField(source="published_at")
+    issueId = serializers.UUIDField(source="issue_id", allow_null=True)
+    # Raw issueId isn't meaningful to show a user — number/year is what "Выпуск
+    # №N" needs. No public issue-detail endpoint exists yet (that's US-10), so
+    # exposing it here directly is the cheapest way to make the author's
+    # "published" view actually show which issue (M3f plan #6).
+    issueNumber = serializers.IntegerField(source="issue.number", default=None)
+    issueYear = serializers.IntegerField(source="issue.year", default=None)
     authors = ArticleAuthorSerializer(many=True, read_only=True)
 
     class Meta:
@@ -143,6 +153,10 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
             "updatedAt",
             "lastAutosavedAt",
             "completenessApprovedAt",
+            "issueNumber",
+            "issueYear",
+            "publishedAt",
+            "issueId",
             "authors",
         ]
 
@@ -226,3 +240,14 @@ class DecisionInputSerializer(serializers.Serializer):
         if not value.strip():
             raise serializers.ValidationError("Комментарий обязателен для любого решения.")
         return value
+
+
+class PublishInputSerializer(serializers.Serializer):
+    """
+    POST /api/articles/{id}/publish (TS section 7, US-9). Existence of the
+    issue is checked in the view (get_object_or_404) rather than here, so a
+    missing issue produces the 404 TS documents for this endpoint instead of
+    a generic 400 from field validation.
+    """
+
+    issueId = serializers.UUIDField()

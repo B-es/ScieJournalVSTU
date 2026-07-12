@@ -85,6 +85,10 @@ export interface ArticleDetail {
   updatedAt: string;
   lastAutosavedAt: string | null;
   completenessApprovedAt: string | null;
+  publishedAt: string | null;
+  issueId: string | null;
+  issueNumber: number | null;
+  issueYear: number | null;
   authors: ArticleAuthor[];
 }
 

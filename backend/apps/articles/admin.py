@@ -3,6 +3,8 @@ from django.contrib import admin, messages
 from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 from django.shortcuts import render
 
+from apps.issues.models import Issue
+
 from . import services
 from .models import Article, ArticleAuthor, ArticleDocument, ArticleVersion
 
@@ -25,6 +27,11 @@ class ArticleVersionInline(admin.TabularInline):
 
 class ReturnForRevisionForm(forms.Form):
     comment = forms.CharField(widget=forms.Textarea, label="Комментарий (обязательно)")
+    _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
+
+
+class PublishArticleForm(forms.Form):
+    issue = forms.ModelChoiceField(queryset=Issue.objects.all(), label="Выпуск")
     _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
 
 
@@ -88,6 +95,59 @@ def return_for_revision_action(modeladmin, request, queryset):
     )
 
 
+@admin.action(description="Присвоить DOI")
+def assign_doi_action(modeladmin, request, queryset):
+    """US-9: no intermediate page needed — assign_doi generates the DOI itself (M3f plan #2)."""
+    eligible = queryset.filter(status=Article.ACCEPTED, doi="")
+    count = 0
+    for article in eligible:
+        try:
+            services.assign_doi(article, request.user)
+            count += 1
+        except ValueError as exc:
+            modeladmin.message_user(request, f"{article}: {exc}", level=messages.WARNING)
+
+    skipped = queryset.count() - count
+    if count:
+        modeladmin.message_user(request, f"DOI присвоен: {count}.", level=messages.SUCCESS)
+    if skipped:
+        modeladmin.message_user(
+            request,
+            f"Пропущено без изменений: {skipped} (нужен статус «Принята к публикации» без уже присвоенного DOI).",
+            level=messages.WARNING,
+        )
+
+
+@admin.action(description="Опубликовать в выпуске")
+def publish_article_action(modeladmin, request, queryset):
+    """US-9: needs an Issue picked — same intermediate-page pattern as return_for_revision_action."""
+    eligible = queryset.filter(status=Article.ACCEPTED).exclude(doi="")
+    if not eligible.exists():
+        modeladmin.message_user(
+            request,
+            "Нет подходящих статей: нужен статус «Принята к публикации» с уже присвоенным DOI.",
+            level=messages.WARNING,
+        )
+        return None
+
+    if "apply" in request.POST:
+        form = PublishArticleForm(request.POST)
+        if form.is_valid():
+            issue = form.cleaned_data["issue"]
+            for article in eligible:
+                services.publish_article(article, request.user, issue)
+            modeladmin.message_user(request, f"Опубликовано: {eligible.count()}.", level=messages.SUCCESS)
+            return None
+    else:
+        form = PublishArticleForm(initial={"_selected_action": request.POST.getlist(ACTION_CHECKBOX_NAME)})
+
+    return render(
+        request,
+        "admin/articles/publish_article.html",
+        context={"articles": eligible, "form": form, "title": "Опубликовать статьи в выпуске"},
+    )
+
+
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ("title_ru", "status", "completeness_approved_at", "submitted_by", "topic", "doi", "created_at")
@@ -95,7 +155,7 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ("title_ru", "title_en", "doi")
     inlines = [ArticleAuthorInline, ArticleVersionInline]
     readonly_fields = ("id", "created_at", "updated_at", "last_autosaved_at")
-    actions = [approve_completeness_action, return_for_revision_action]
+    actions = [approve_completeness_action, return_for_revision_action, assign_doi_action, publish_article_action]
 
 
 @admin.register(ArticleVersion)

@@ -130,7 +130,10 @@
     "techEditorComment": "Technical editor's comment",
     "editorComment": "Chief editor's comment",
     "rejectedNotice": "The article has been rejected.",
-    "acceptedNotice": "The article has been accepted for publication."
+    "acceptedNotice": "The article has been accepted for publication.",
+    "publishedNotice": "The article has been published.",
+    "doiLabel": "DOI",
+    "issueLabel": "Issue No."
   },
   "articleRevision": {
     "title": "Upload a corrected version",

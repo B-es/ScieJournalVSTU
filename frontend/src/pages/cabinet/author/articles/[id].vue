@@ -82,6 +82,15 @@ onMounted(load);
             <strong>{{ t("articlePage.editorComment") }}:</strong> {{ latestAcceptanceComment }}
           </p>
         </template>
+        <template v-else-if="detail.article.status === 'published'">
+          <p class="article-page__notice article-page__notice--accepted">{{ t("articlePage.publishedNotice") }}</p>
+          <p class="article-page__notice">
+            <strong>{{ t("articlePage.doiLabel") }}:</strong> {{ detail.article.doi }}
+          </p>
+          <p v-if="detail.article.issueNumber" class="article-page__notice">
+            <strong>{{ t("articlePage.issueLabel") }}{{ detail.article.issueNumber }}</strong> ({{ detail.article.issueYear }})
+          </p>
+        </template>
         <p v-else class="article-page__notice">{{ t("articlePage.readonlyNotice") }}</p>
 
         <h3>{{ t("articlePage.statusHistory") }}</h3>

@@ -5,6 +5,8 @@ REST endpoints documented in TS section 7 (decision #2): one implementation,
 two entry points.
 """
 
+import uuid
+
 from django.db.models import Max
 from django.utils import timezone
 
@@ -178,3 +180,56 @@ def add_revision_version(
         article.save(update_fields=["status", "completeness_approved_at"])
 
     return version
+
+
+def assign_doi(article: Article, editor) -> Article:
+    """
+    US-9: placeholder DOI generation — PRD section 8 (risks) explicitly
+    allows manual/stand-in DOIs as a stopgap until a real CrossRef/НЭИКОН
+    integration exists. Uniqueness is checked here (retry-on-collision)
+    rather than a DB unique index — see M3f plan decision #2.
+    """
+    if article.status != Article.ACCEPTED:
+        raise ValueError("DOI можно присвоить только статье в статусе «Принята к публикации».")
+    if article.doi:
+        raise ValueError("Статье уже присвоен DOI.")
+
+    year = timezone.now().year
+    for _ in range(5):
+        candidate = f"10.36622/vstu.{year}.{uuid.uuid4().hex[:8]}"
+        if not Article.objects.filter(doi=candidate).exists():
+            article.doi = candidate
+            break
+    else:
+        raise ValueError("Не удалось сгенерировать уникальный DOI, попробуйте ещё раз.")
+
+    article.save(update_fields=["doi"])
+    return article
+
+
+def publish_article(article: Article, editor, issue) -> Article:
+    """US-9: PRD section 7 — no publication without a DOI and without an issue."""
+    if article.status != Article.ACCEPTED:
+        raise ValueError("Опубликовать можно только статью в статусе «Принята к публикации».")
+    if not article.doi:
+        raise ValueError("Присвойте DOI перед публикацией.")
+
+    article.issue = issue
+    article.status = Article.PUBLISHED
+    article.published_at = timezone.now()
+    article.save(update_fields=["issue", "status", "published_at"])
+
+    # Author + registered co-authors (PRD: "автор и соавторы получают
+    # уведомление") — co-authors without a linked account have no way to
+    # receive an in-app notification (M3f plan decision #5).
+    recipients = {article.submitted_by}
+    recipients.update(a.user for a in article.authors.exclude(user=None))
+
+    for user in recipients:
+        Notification.objects.create(
+            user=user,
+            article=article,
+            type=Notification.STATUS_CHANGED,
+            message=f"Статья «{article.title_ru}» опубликована в выпуске №{issue.number} ({issue.year}). DOI: {article.doi}.",
+        )
+    return article

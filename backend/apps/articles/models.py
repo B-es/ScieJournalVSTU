@@ -64,6 +64,9 @@ class Article(models.Model):
     # list tied to the status-badge's fixed colors, and "submitted" covers
     # both sub-stages — see M3b plan decision #3.
     completeness_approved_at = models.DateTimeField(null=True, blank=True)
+    # Set at the moment status becomes PUBLISHED (US-9) — updated_at isn't
+    # usable for this since it's overwritten by any later edit.
+    published_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         db_table = "articles"

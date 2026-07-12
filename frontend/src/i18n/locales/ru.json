@@ -130,7 +130,10 @@
     "techEditorComment": "Комментарий технического редактора",
     "editorComment": "Комментарий главного редактора",
     "rejectedNotice": "Статья отклонена.",
-    "acceptedNotice": "Статья принята к публикации."
+    "acceptedNotice": "Статья принята к публикации.",
+    "publishedNotice": "Статья опубликована.",
+    "doiLabel": "DOI",
+    "issueLabel": "Выпуск №"
   },
   "articleRevision": {
     "title": "Загрузить исправленную версию",

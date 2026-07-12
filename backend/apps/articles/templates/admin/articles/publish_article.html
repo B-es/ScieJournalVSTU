@@ -1,0 +1,18 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<p>Будут опубликованы в выбранном выпуске (статус «Опубликована», автор и зарегистрированные соавторы получат уведомление):</p>
+<ul>
+  {% for article in articles %}
+    <li>{{ article.title_ru }} — {{ article.submitted_by }} (DOI: {{ article.doi }})</li>
+  {% endfor %}
+</ul>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="hidden" name="action" value="publish_article_action">
+  <input type="submit" name="apply" value="Опубликовать" class="default">
+  <a href="." class="button cancel-link">Отмена</a>
+</form>
+{% endblock %}

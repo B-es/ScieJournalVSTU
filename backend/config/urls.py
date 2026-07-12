@@ -15,6 +15,7 @@ urlpatterns = [
     path("api/users/reviewers", ReviewersListView.as_view(), name="users-reviewers"),
     path("api/articles/", include("apps.articles.urls")),
     path("api/reviews/", include("apps.reviews.urls")),
+    path("api/issues/", include("apps.issues.urls")),
 ]
 
 if settings.DEBUG:

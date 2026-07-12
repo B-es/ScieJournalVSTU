@@ -12,6 +12,7 @@ from apps.notifications.models import Notification
 from apps.users.models import Role, User
 from apps.users.permissions import HasRole
 
+from apps.issues.models import Issue
 from apps.reviews import services as review_services
 from apps.reviews.models import Review
 
@@ -25,6 +26,7 @@ from .serializers import (
     CompletenessCheckInputSerializer,
     DecisionInputSerializer,
     EditorialDecisionSerializer,
+    PublishInputSerializer,
     ReviewerAssignmentInputSerializer,
     ReviewSerializer,
     TopicCheckInputSerializer,
@@ -376,6 +378,41 @@ class ArticleDecisionView(APIView):
             return Response({"code": "not_ready", "message": str(exc)}, status=status.HTTP_409_CONFLICT)
 
         return Response({"status": article.status})
+
+
+class ArticleAssignDoiView(APIView):
+    """POST /api/articles/{id}/doi — TS section 7 (US-9). Empty body."""
+
+    permission_classes = [HasRole(Role.TECH_EDITOR)]
+
+    def post(self, request, article_id):
+        article = get_object_or_404(Article, pk=article_id)
+        try:
+            services.assign_doi(article, request.user)
+        except ValueError as exc:
+            return Response({"code": "not_ready", "message": str(exc)}, status=status.HTTP_409_CONFLICT)
+
+        return Response({"doi": article.doi})
+
+
+class ArticlePublishView(APIView):
+    """POST /api/articles/{id}/publish — TS section 7 (US-9)."""
+
+    permission_classes = [HasRole(Role.TECH_EDITOR)]
+
+    def post(self, request, article_id):
+        article = get_object_or_404(Article, pk=article_id)
+
+        input_serializer = PublishInputSerializer(data=request.data)
+        input_serializer.is_valid(raise_exception=True)
+        issue = get_object_or_404(Issue, pk=input_serializer.validated_data["issueId"])
+
+        try:
+            services.publish_article(article, request.user, issue)
+        except ValueError as exc:
+            return Response({"code": "not_ready", "message": str(exc)}, status=status.HTTP_409_CONFLICT)
+
+        return Response({"status": article.status, "publishedAt": article.published_at})
 
 
 class ArticleListView(APIView):
