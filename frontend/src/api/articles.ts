@@ -97,10 +97,21 @@ export interface EditorialDecisionItem {
   createdAt: string;
 }
 
+export interface ArticleReviewSummary {
+  id: string;
+  reviewerId: string;
+  invitationStatus: "invited" | "accepted" | "declined";
+  deadline: string;
+  recommendation: "" | "accept" | "revise" | "reject";
+  submittedAt: string | null;
+  /** Only this sub-field of the reviewer's form data — never commentsForEditor (M3e plan #5). */
+  commentsForAuthor: string;
+}
+
 export interface ArticleDetailResponse {
   article: ArticleDetail;
   versions: ArticleVersion[];
-  reviews: unknown[];
+  reviews: ArticleReviewSummary[];
   decisions: EditorialDecisionItem[];
 }
 
@@ -123,6 +134,11 @@ export interface TopicCheckPayload {
 export interface ReviewerAssignmentPayload {
   reviewerIds: string[];
   deadline: string;
+}
+
+export interface DecisionPayload {
+  decision: "accept" | "reject" | "revise";
+  comment: string;
 }
 
 /**
@@ -207,6 +223,14 @@ export function topicCheck(articleId: string, payload: TopicCheckPayload) {
 /** US-4: POST /api/articles/{id}/reviewers (chief editor, >=2 reviewers). */
 export function assignReviewers(articleId: string, payload: ReviewerAssignmentPayload) {
   return apiFetch<{ reviews: unknown[] }>(`/articles/${articleId}/reviewers`, {
+    method: "POST",
+    body: payload,
+  });
+}
+
+/** US-7: POST /api/articles/{id}/decision (chief editor) — comment always required. */
+export function makeDecision(articleId: string, payload: DecisionPayload) {
+  return apiFetch<{ status: string }>(`/articles/${articleId}/decision`, {
     method: "POST",
     body: payload,
   });

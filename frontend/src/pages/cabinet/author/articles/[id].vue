@@ -15,13 +15,26 @@ const detail = ref<articlesApi.ArticleDetailResponse | null>(null);
 const loading = ref(true);
 const error = ref("");
 
-const latestRevisionComment = computed(() => {
+function latestDecision(decision: "revise" | "reject" | "accept") {
   const decisions = detail.value?.decisions ?? [];
-  const returns = decisions
-    .filter((d) => d.stage === "completeness_check" && d.decision === "revise")
+  const matches = decisions
+    .filter((d) => d.decision === decision)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  return returns[0]?.comment ?? "";
-});
+  return matches[0];
+}
+
+// Any stage can send an article to revision now (completeness check, M3b —
+// the technical editor; review decision, M3e — the chief editor) — track
+// which stage it came from so the right role gets credited in the label.
+const latestRevision = computed(() => latestDecision("revise"));
+const latestRevisionComment = computed(() => latestRevision.value?.comment ?? "");
+const revisionCommentLabel = computed(() =>
+  latestRevision.value?.stage === "completeness_check" ? t("articlePage.techEditorComment") : t("articlePage.editorComment"),
+);
+const latestRejectionComment = computed(() => latestDecision("reject")?.comment ?? "");
+const latestAcceptanceComment = computed(() => latestDecision("accept")?.comment ?? "");
+
+const reviewerComments = computed(() => (detail.value?.reviews ?? []).map((r) => r.commentsForAuthor).filter(Boolean));
 
 async function load() {
   loading.value = true;
@@ -55,8 +68,20 @@ onMounted(load);
 
       <section v-else>
         <p v-if="detail.article.status === 'needs_revision' && latestRevisionComment" class="article-page__notice">
-          <strong>{{ t("articlePage.techEditorComment") }}:</strong> {{ latestRevisionComment }}
+          <strong>{{ revisionCommentLabel }}:</strong> {{ latestRevisionComment }}
         </p>
+        <template v-else-if="detail.article.status === 'rejected'">
+          <p class="article-page__notice article-page__notice--rejected">{{ t("articlePage.rejectedNotice") }}</p>
+          <p v-if="latestRejectionComment" class="article-page__notice">
+            <strong>{{ t("articlePage.editorComment") }}:</strong> {{ latestRejectionComment }}
+          </p>
+        </template>
+        <template v-else-if="detail.article.status === 'accepted'">
+          <p class="article-page__notice article-page__notice--accepted">{{ t("articlePage.acceptedNotice") }}</p>
+          <p v-if="latestAcceptanceComment" class="article-page__notice">
+            <strong>{{ t("articlePage.editorComment") }}:</strong> {{ latestAcceptanceComment }}
+          </p>
+        </template>
         <p v-else class="article-page__notice">{{ t("articlePage.readonlyNotice") }}</p>
 
         <h3>{{ t("articlePage.statusHistory") }}</h3>
@@ -72,6 +97,13 @@ onMounted(load);
           <dt>{{ t("articleForm.authorsTitle") }}</dt>
           <dd>{{ detail.article.authors.map((a) => a.fullName).join(", ") }}</dd>
         </dl>
+
+        <section v-if="reviewerComments.length" class="article-page__feedback">
+          <h3>{{ t("reviewerFeedback.title") }}</h3>
+          <ul>
+            <li v-for="(comment, idx) in reviewerComments" :key="idx">{{ comment }}</li>
+          </ul>
+        </section>
 
         <ArticleRevisionForm
           v-if="detail.article.status === 'needs_revision'"
@@ -95,6 +127,16 @@ onMounted(load);
   color: var(--color-text-secondary);
 }
 
+.article-page__notice--rejected {
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+.article-page__notice--accepted {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
 .article-page__summary {
   display: grid;
   grid-template-columns: max-content 1fr;
@@ -109,5 +151,17 @@ onMounted(load);
 
 .article-page__summary dd {
   margin: 0;
+}
+
+.article-page__feedback {
+  margin-bottom: var(--spacing-lg);
+}
+
+.article-page__feedback ul {
+  padding-left: var(--spacing-lg);
+}
+
+.article-page__feedback li {
+  margin-bottom: var(--spacing-sm);
 }
 </style>

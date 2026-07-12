@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from "vue";
 import * as articlesApi from "~/api/articles";
 import StatusBadge from "~/components/StatusBadge.vue";
+import DecisionForm from "~/components/cabinet/DecisionForm.vue";
 import TopicCheckForm from "~/components/cabinet/TopicCheckForm.vue";
 
 definePageMeta({ layout: "cabinet" });
@@ -61,6 +62,12 @@ onMounted(load);
       </dl>
 
       <TopicCheckForm v-if="inTopicCheckQueue" :article-id="articleId" @done="load" />
+      <DecisionForm
+        v-if="detail.article.status === 'in_review'"
+        :article-id="articleId"
+        :reviews="detail.reviews"
+        @decided="load"
+      />
     </template>
   </div>
 </template>
