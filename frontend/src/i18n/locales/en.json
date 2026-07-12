@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "VSTU Scientific Journal"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About the Journal",
+    "archive": "Archive",
+    "forAuthors": "For Authors",
+    "search": "Advanced Search",
+    "login": "Log In",
+    "register": "Register",
+    "logout": "Log Out"
+  },
+  "footer": {
+    "openAccessPolicy": "Open Access Policy",
+    "jobs": "Careers at ScieJournalVSTU",
+    "guidelines": "Guidelines",
+    "guidelinesForAuthors": "For Authors",
+    "guidelinesForReviewers": "For Reviewers",
+    "guidelinesForEditors": "For Editors",
+    "termsOfUse": "Terms of Use",
+    "privacyPolicy": "Privacy Policy",
+    "termsAndConditions": "Terms and Conditions",
+    "help": "Help & Support"
+  },
+  "auth": {
+    "login": {
+      "title": "Log In",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Log In",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Register",
+      "error": "Incorrect email or password."
+    },
+    "register": {
+      "title": "Register",
+      "fullName": "Full name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Register",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Log in",
+      "emailTaken": "A user with this email is already registered.",
+      "error": "Could not register. Please check the details you entered."
+    },
+    "validation": {
+      "required": "This field is required",
+      "email": "Enter a valid email",
+      "minLength": "At least {min} characters"
+    }
+  },
+  "cabinet": {
+    "nav": {
+      "myArticles": "My Articles",
+      "submitArticle": "Submit Article",
+      "reviewArticles": "Articles to Review",
+      "invitations": "Invitations",
+      "manageArticles": "Manage Articles",
+      "decisions": "Decisions",
+      "notifications": "Notifications",
+      "settings": "Settings"
+    }
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Retry",
+    "error": "Failed to load data"
+  }
+}

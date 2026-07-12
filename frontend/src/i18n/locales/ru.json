@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "Научный журнал ВолгГТУ"
+  },
+  "nav": {
+    "home": "Главная",
+    "about": "О журнале",
+    "archive": "Архив",
+    "forAuthors": "Авторам",
+    "search": "Расширенный поиск",
+    "login": "Вход",
+    "register": "Регистрация",
+    "logout": "Выйти"
+  },
+  "footer": {
+    "openAccessPolicy": "Политика открытого доступа",
+    "jobs": "Работа в ScieJournalVSTU",
+    "guidelines": "Руководящие принципы",
+    "guidelinesForAuthors": "Для авторов",
+    "guidelinesForReviewers": "Для рецензентов",
+    "guidelinesForEditors": "Для редакторов",
+    "termsOfUse": "Условия использования",
+    "privacyPolicy": "Политика конфиденциальности",
+    "termsAndConditions": "Условия и положения",
+    "help": "Помощь и поддержка"
+  },
+  "auth": {
+    "login": {
+      "title": "Вход",
+      "email": "Email",
+      "password": "Пароль",
+      "submit": "Войти",
+      "forgotPassword": "Забыли пароль?",
+      "noAccount": "Нет аккаунта?",
+      "registerLink": "Зарегистрироваться",
+      "error": "Неверный email или пароль."
+    },
+    "register": {
+      "title": "Регистрация",
+      "fullName": "ФИО",
+      "email": "Email",
+      "password": "Пароль",
+      "submit": "Зарегистрироваться",
+      "haveAccount": "Уже есть аккаунт?",
+      "loginLink": "Войти",
+      "emailTaken": "Пользователь с таким email уже зарегистрирован.",
+      "error": "Не удалось зарегистрироваться. Проверьте введённые данные."
+    },
+    "validation": {
+      "required": "Обязательное поле",
+      "email": "Введите корректный email",
+      "minLength": "Минимум {min} символов"
+    }
+  },
+  "cabinet": {
+    "nav": {
+      "myArticles": "Мои статьи",
+      "submitArticle": "Подать статью",
+      "reviewArticles": "Статьи на рецензию",
+      "invitations": "Приглашения",
+      "manageArticles": "Управление статьями",
+      "decisions": "Принятие решения",
+      "notifications": "Уведомления",
+      "settings": "Настройки"
+    }
+  },
+  "common": {
+    "loading": "Загрузка…",
+    "retry": "Повторить",
+    "error": "Не удалось загрузить данные"
+  }
+}

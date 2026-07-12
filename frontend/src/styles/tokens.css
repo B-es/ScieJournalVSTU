@@ -1,0 +1,112 @@
+/*
+ * Design tokens — single source of truth mirrored from DS section 10.
+ * Do not hardcode raw values elsewhere; reference these custom properties.
+ */
+:root {
+  /* Colors — DS section 2 */
+  --color-primary: #1976d2;
+  --color-secondary: #5c6bc0;
+  --color-background: #ffffff;
+  --color-surface: #f5f7fa;
+  --color-text-primary: #1a2027;
+  --color-text-secondary: #5b6672;
+  --color-text-inverse: #ffffff;
+  --color-link: var(--color-primary);
+  --color-success: #13a02f;
+  --color-warning: #ffa200;
+  --color-error: #d21919;
+  --color-border: #e1e5ea;
+
+  /* Article status colors — DS section 2, used only inside the status badge */
+  --color-status-submitted: #5b6672;
+  --color-status-revision: #ffa200;
+  --color-status-in-review: #1976d2;
+  --color-status-accepted: #00897b;
+  --color-status-published: #13a02f;
+  --color-status-rejected: #d21919;
+
+  /* Typography — DS section 2 */
+  --font-family-base: "DM Sans", sans-serif;
+  --type-h1-size: 32px;
+  --type-h1-line: 40px;
+  --type-h2-size: 24px;
+  --type-h2-line: 32px;
+  --type-h3-size: 20px;
+  --type-h3-line: 28px;
+  --type-body-size: 16px;
+  --type-body-line: 24px;
+  --type-body-large-size: 18px;
+  --type-body-large-line: 28px;
+  --type-caption-size: 14px;
+  --type-caption-line: 20px;
+  --type-button-size: 16px;
+  --type-button-line: 20px;
+
+  /* Spacing — DS section 2 */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 40px;
+
+  /* Grid — DS section 2 */
+  --grid-columns-desktop: 12;
+  --grid-container-width: 1340px;
+  --grid-gutter: 18px;
+  --grid-cabinet-sidebar: 2;
+  --grid-cabinet-content: 10;
+
+  /* Radius — DS section 2 */
+  --radius-sm: 6px;
+  --radius-md: 9px;
+  --radius-lg: 14px;
+
+  /* Shadows — DS section 2 */
+  --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.08);
+  --shadow-md: 0 4px 12px rgba(16, 24, 40, 0.12);
+  --shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.18);
+
+  /* Icons — DS section 2 */
+  --icon-size-sm: 16px;
+  --icon-size-base: 24px;
+  --icon-size-lg: 52px;
+
+  /* Breakpoints — DS section 7 (referenced from CSS media queries as literals,
+     custom properties cannot be used inside @media conditions) */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-base);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  color: var(--color-text-primary);
+  background: var(--color-background);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-family-base);
+}
+
+a {
+  color: var(--color-link);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
