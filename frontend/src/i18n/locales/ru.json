@@ -225,5 +225,65 @@
   },
   "reviewerFeedback": {
     "title": "Отзывы рецензентов"
+  },
+  "home": {
+    "seoDescription": "Научные статьи и выпуски в открытом доступе",
+    "latestIssue": "Последний выпуск",
+    "recentArticles": "Последние статьи",
+    "noArticles": "Пока нет опубликованных статей"
+  },
+  "archivePage": {
+    "title": "Архив выпусков",
+    "allYears": "Все годы",
+    "empty": "Выпуски не найдены"
+  },
+  "issuePage": {
+    "notFound": "Выпуск не найден",
+    "numberLabel": "Выпуск №{n}",
+    "contents": "Содержание",
+    "empty": "В этом выпуске пока нет опубликованных статей"
+  },
+  "publicArticlePage": {
+    "notFound": "Статья не найдена или снята с публикации",
+    "abstract": "Аннотация",
+    "keywords": "Ключевые слова",
+    "pages": "Страниц"
+  },
+  "searchPage": {
+    "title": "Расширенный поиск",
+    "queryPlaceholder": "Название, ключевые слова…",
+    "authorPlaceholder": "Автор",
+    "topicPlaceholder": "Направление",
+    "submit": "Найти",
+    "empty": "По вашему запросу ничего не найдено"
+  },
+  "citation": {
+    "title": "Цитирование",
+    "format": {
+      "gost": "ГОСТ",
+      "apa": "APA",
+      "bibtex": "BibTeX"
+    },
+    "copy": "Копировать",
+    "copied": "Ссылка скопирована",
+    "copyError": "Не удалось скопировать ссылку",
+    "error": "Не удалось получить ссылку для цитирования"
+  },
+  "articleCard": {
+    "openAccess": "Открытый доступ",
+    "pages": "{n} стр."
+  },
+  "issueCard": {
+    "numberLabel": "Выпуск №{n}",
+    "articlesCount": "Статей: {n}",
+    "pagesCount": "Страниц: {n}",
+    "authorsCount": "Авторов: {n}",
+    "openIssue": "Открыть выпуск"
+  },
+  "pagination": {
+    "label": "Постраничная навигация",
+    "prev": "Назад",
+    "next": "Вперёд",
+    "pageOf": "Страница {page} из {total}"
   }
 }

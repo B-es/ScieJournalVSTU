@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "apps.issues",
     "apps.notifications",
     "apps.journal_settings",
+    "apps.public",
 ]
 
 MIDDLEWARE = [
@@ -115,6 +116,12 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
+    # DRF reserves the "format" query param for its own content-negotiation
+    # (renderer suffix, e.g. ?format=json) — that collides with TS section 7's
+    # public citation endpoint, which is documented with its own
+    # `?format=gost|apa|bibtex` param (M4/US-12). Nothing here relies on DRF's
+    # format-suffix feature, so disabling it globally is the cheapest fix.
+    "URL_FORMAT_OVERRIDE": None,
 }
 
 SIMPLE_JWT = {

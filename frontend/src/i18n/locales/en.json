@@ -225,5 +225,65 @@
   },
   "reviewerFeedback": {
     "title": "Reviewer feedback"
+  },
+  "home": {
+    "seoDescription": "Open-access scientific articles and issues",
+    "latestIssue": "Latest issue",
+    "recentArticles": "Recent articles",
+    "noArticles": "No published articles yet"
+  },
+  "archivePage": {
+    "title": "Issue archive",
+    "allYears": "All years",
+    "empty": "No issues found"
+  },
+  "issuePage": {
+    "notFound": "Issue not found",
+    "numberLabel": "Issue No. {n}",
+    "contents": "Contents",
+    "empty": "This issue has no published articles yet"
+  },
+  "publicArticlePage": {
+    "notFound": "Article not found or unpublished",
+    "abstract": "Abstract",
+    "keywords": "Keywords",
+    "pages": "Pages"
+  },
+  "searchPage": {
+    "title": "Advanced search",
+    "queryPlaceholder": "Title, keywords…",
+    "authorPlaceholder": "Author",
+    "topicPlaceholder": "Topic",
+    "submit": "Search",
+    "empty": "No results found for your query"
+  },
+  "citation": {
+    "title": "Cite this article",
+    "format": {
+      "gost": "GOST",
+      "apa": "APA",
+      "bibtex": "BibTeX"
+    },
+    "copy": "Copy",
+    "copied": "Citation copied",
+    "copyError": "Could not copy the citation",
+    "error": "Could not load the citation"
+  },
+  "articleCard": {
+    "openAccess": "Open Access",
+    "pages": "{n} pp."
+  },
+  "issueCard": {
+    "numberLabel": "Issue No. {n}",
+    "articlesCount": "Articles: {n}",
+    "pagesCount": "Pages: {n}",
+    "authorsCount": "Authors: {n}",
+    "openIssue": "Open issue"
+  },
+  "pagination": {
+    "label": "Pagination",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}"
   }
 }

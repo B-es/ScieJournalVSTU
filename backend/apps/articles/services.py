@@ -219,6 +219,12 @@ def publish_article(article: Article, editor, issue) -> Article:
     article.published_at = timezone.now()
     article.save(update_fields=["issue", "status", "published_at"])
 
+    # M4 (US-10): the public archive lists issues by Issue.published_at, but
+    # nothing was ever setting it — stamp it on the issue's first article.
+    if not issue.published_at:
+        issue.published_at = timezone.now()
+        issue.save(update_fields=["published_at"])
+
     # Author + registered co-authors (PRD: "автор и соавторы получают
     # уведомление") — co-authors without a linked account have no way to
     # receive an in-app notification (M3f plan decision #5).
