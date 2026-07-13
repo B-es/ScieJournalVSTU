@@ -3,6 +3,7 @@ from rest_framework import serializers
 from apps.articles.models import Article
 from apps.articles.serializers import ArticleAuthorSerializer
 from apps.issues.models import Issue
+from apps.journal_settings.models import JournalSettings
 
 
 class PublicArticleListSerializer(serializers.ModelSerializer):
@@ -102,3 +103,29 @@ class PublicIssueListSerializer(serializers.ModelSerializer):
             .distinct()
             .count()
         )
+
+
+class PublicJournalSettingsSerializer(serializers.ModelSerializer):
+    """M5: "О журнале"/"Требования к авторам" pages — one singleton, both screens pick different fields."""
+
+    journalNameRu = serializers.CharField(source="journal_name_ru")
+    journalNameEn = serializers.CharField(source="journal_name_en")
+    aboutRu = serializers.CharField(source="about_ru")
+    aboutEn = serializers.CharField(source="about_en")
+    # Passed through as-is — see M5 plan #3 for the expected list-of-objects shape.
+    editorialBoard = serializers.JSONField(source="editorial_board")
+    guidelinesForAuthorsRu = serializers.CharField(source="guidelines_for_authors_ru")
+    guidelinesForAuthorsEn = serializers.CharField(source="guidelines_for_authors_en")
+
+    class Meta:
+        model = JournalSettings
+        fields = [
+            "journalNameRu",
+            "journalNameEn",
+            "issn",
+            "aboutRu",
+            "aboutEn",
+            "editorialBoard",
+            "guidelinesForAuthorsRu",
+            "guidelinesForAuthorsEn",
+        ]

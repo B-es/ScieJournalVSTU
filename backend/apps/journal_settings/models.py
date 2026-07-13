@@ -14,7 +14,14 @@ class JournalSettings(models.Model):
     issn = models.CharField(max_length=16, blank=True)
     about_ru = models.TextField()
     about_en = models.TextField()
+    # Expected shape (no schema enforced — edited as raw JSON in Django Admin):
+    # [{"fullNameRu": "...", "fullNameEn": "...", "roleRu": "...", "roleEn": "...",
+    #   "affiliationRu": "...", "affiliationEn": "...", "order": 0}, ...]
     editorial_board = models.JSONField(null=True, blank=True)
+    # M5: "Требования к авторам" page content — no dedicated model/US for this
+    # page (see M5 plan #2), just static editorial text on the same singleton.
+    guidelines_for_authors_ru = models.TextField(blank=True)
+    guidelines_for_authors_en = models.TextField(blank=True)
 
     class Meta:
         db_table = "journal_settings"

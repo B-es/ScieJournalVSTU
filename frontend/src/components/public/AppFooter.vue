@@ -4,7 +4,7 @@ const { t } = useI18n();
 const links = computed(() => [
   { to: "/open-access-policy", label: t("footer.openAccessPolicy") },
   { to: "/jobs", label: t("footer.jobs") },
-  { to: "/guidelines/authors", label: t("footer.guidelinesForAuthors") },
+  { to: "/for-authors", label: t("footer.guidelinesForAuthors") },
   { to: "/guidelines/reviewers", label: t("footer.guidelinesForReviewers") },
   { to: "/guidelines/editors", label: t("footer.guidelinesForEditors") },
   { to: "/terms-of-use", label: t("footer.termsOfUse") },

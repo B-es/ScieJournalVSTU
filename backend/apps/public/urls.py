@@ -6,6 +6,7 @@ from .views import (
     PublicArticleListView,
     PublicIssueDetailView,
     PublicIssueListView,
+    PublicJournalSettingsView,
 )
 
 urlpatterns = [
@@ -14,4 +15,5 @@ urlpatterns = [
     path("articles/<uuid:article_id>/citation", ArticleCitationView.as_view(), name="public-article-citation"),
     path("issues", PublicIssueListView.as_view(), name="public-issue-list"),
     path("issues/<uuid:issue_id>", PublicIssueDetailView.as_view(), name="public-issue-detail"),
+    path("settings", PublicJournalSettingsView.as_view(), name="public-journal-settings"),
 ]

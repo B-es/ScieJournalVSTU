@@ -7,12 +7,14 @@ from rest_framework.views import APIView
 
 from apps.articles.models import Article
 from apps.issues.models import Issue
+from apps.journal_settings.models import JournalSettings
 
 from . import services
 from .serializers import (
     PublicArticleDetailSerializer,
     PublicArticleListSerializer,
     PublicIssueListSerializer,
+    PublicJournalSettingsSerializer,
 )
 
 DEFAULT_PAGE_SIZE = 20
@@ -144,3 +146,12 @@ class ArticleCitationView(APIView):
             return Response({"code": "no_doi", "message": str(exc)}, status=status.HTTP_409_CONFLICT)
 
         return Response({"format": fmt, "citationText": citation_text})
+
+
+class PublicJournalSettingsView(APIView):
+    """GET /api/public/settings — M5: backs "О журнале"/"Требования к авторам"."""
+
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        return Response(PublicJournalSettingsSerializer(JournalSettings.load()).data)

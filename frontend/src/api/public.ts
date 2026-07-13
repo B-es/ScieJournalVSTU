@@ -85,3 +85,29 @@ export function listPublicIssues(year?: number) {
 export function getPublicIssue(issueId: string) {
   return apiFetch<PublicIssueDetailResponse>(`/public/issues/${issueId}`);
 }
+
+export interface EditorialBoardMember {
+  fullNameRu: string;
+  fullNameEn: string;
+  roleRu: string;
+  roleEn: string;
+  affiliationRu: string;
+  affiliationEn: string;
+  order: number;
+}
+
+export interface PublicJournalSettings {
+  journalNameRu: string;
+  journalNameEn: string;
+  issn: string;
+  aboutRu: string;
+  aboutEn: string;
+  editorialBoard: EditorialBoardMember[] | null;
+  guidelinesForAuthorsRu: string;
+  guidelinesForAuthorsEn: string;
+}
+
+/** M5: backs "О журнале" and "Требования к авторам" — one singleton, both pages pick fields. */
+export function getJournalSettings() {
+  return apiFetch<PublicJournalSettings>("/public/settings");
+}

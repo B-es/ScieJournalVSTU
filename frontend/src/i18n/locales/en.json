@@ -285,5 +285,13 @@
     "prev": "Previous",
     "next": "Next",
     "pageOf": "Page {page} of {total}"
+  },
+  "aboutPage": {
+    "title": "About the Journal",
+    "editorialBoard": "Editorial Board"
+  },
+  "forAuthorsPage": {
+    "title": "Guidelines for Authors",
+    "empty": "Guidelines for authors have not been published yet"
   }
 }
