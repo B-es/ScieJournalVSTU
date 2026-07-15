@@ -12,7 +12,9 @@ export interface ReviewItem {
   id: string;
   article: ReviewArticleSummary;
   reviewerId: string;
-  invitationStatus: "invited" | "accepted" | "declined";
+  reviewerFullName: string;
+  reviewerEmail: string;
+  invitationStatus: "invited" | "accepted" | "declined" | "cancelled";
   deadline: string;
   recommendation: string;
   submittedAt: string | null;
@@ -25,8 +27,11 @@ export interface ReviewerCandidate {
 }
 
 /** US-5: GET /api/reviews — own invitations, or (chief editor) every invitation sent. */
-export function listMyReviews(statusFilter?: string) {
-  const query = statusFilter ? `?status=${encodeURIComponent(statusFilter)}` : "";
+export function listMyReviews(statusFilter?: string, articleId?: string) {
+  const params = new URLSearchParams();
+  if (statusFilter) params.set("status", statusFilter);
+  if (articleId) params.set("article", articleId);
+  const query = params.toString() ? `?${params.toString()}` : "";
   // Trailing slash required, same APPEND_SLASH note as api/articles.ts's listArticles.
   return apiFetch<{ items: ReviewItem[] }>(`/reviews/${query}`);
 }

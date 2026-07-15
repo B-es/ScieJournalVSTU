@@ -29,13 +29,17 @@ class MyReviewsView(APIView):
 
     def get(self, request):
         if request.user.roles.filter(code=Role.CHIEF_EDITOR).exists():
-            qs = Review.objects.all()
+            qs = Review.objects.select_related("reviewer", "article").all()
         else:
-            qs = Review.objects.filter(reviewer=request.user)
+            qs = Review.objects.select_related("reviewer", "article").filter(reviewer=request.user)
 
         status_filter = request.query_params.get("status")
         if status_filter:
             qs = qs.filter(invitation_status=status_filter)
+
+        article_filter = request.query_params.get("article")
+        if article_filter:
+            qs = qs.filter(article_id=article_filter)
 
         return Response({"items": ReviewListItemSerializer(qs, many=True).data})
 

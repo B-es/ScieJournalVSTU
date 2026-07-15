@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 from apps.editorial.models import EditorialDecision
 from apps.reviews.models import Review
+from apps.reviews.services import MIN_REVIEWERS
 
 from .models import Article, ArticleAuthor, ArticleDocument, ArticleVersion
 
@@ -220,7 +221,7 @@ class TopicCheckInputSerializer(serializers.Serializer):
 class ReviewerAssignmentInputSerializer(serializers.Serializer):
     """POST /api/articles/{id}/reviewers (TS section 7, US-4) — at least 2 reviewers (PRD section 7)."""
 
-    reviewerIds = serializers.ListField(child=serializers.UUIDField(), min_length=2)
+    reviewerIds = serializers.ListField(child=serializers.UUIDField(), min_length=MIN_REVIEWERS)
     deadline = serializers.DateField()
 
 

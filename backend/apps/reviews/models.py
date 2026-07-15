@@ -14,10 +14,12 @@ class Review(models.Model):
     INVITED = "invited"
     ACCEPTED = "accepted"
     DECLINED = "declined"
+    CANCELLED = "cancelled"
     INVITATION_STATUS_CHOICES = [
         (INVITED, "Приглашён"),
         (ACCEPTED, "Принято"),
         (DECLINED, "Отклонено"),
+        (CANCELLED, "Аннулировано"),
     ]
 
     RECOMMEND_ACCEPT = "accept"

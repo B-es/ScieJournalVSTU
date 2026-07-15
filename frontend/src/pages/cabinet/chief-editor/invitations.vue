@@ -41,6 +41,7 @@ onMounted(load);
       <thead>
         <tr>
           <th scope="col">{{ t("articlesTable.columnTitle") }}</th>
+          <th scope="col">{{ t("chiefEditor.invitationsReviewer") }}</th>
           <th scope="col">{{ t("topicCheck.deadline") }}</th>
           <th scope="col">{{ t("articlesTable.columnStatus") }}</th>
         </tr>
@@ -48,6 +49,7 @@ onMounted(load);
       <tbody>
         <tr v-for="item in items" :key="item.id">
           <td>{{ item.article.titleRu }}</td>
+          <td>{{ item.reviewerFullName }} ({{ item.reviewerEmail }})</td>
           <td>{{ item.deadline }}</td>
           <td>
             <span :class="`invitation-status invitation-status--${item.invitationStatus}`">
@@ -94,6 +96,11 @@ onMounted(load);
 
 .invitation-status--invited {
   color: var(--color-text-secondary);
+}
+
+.invitation-status--cancelled {
+  color: var(--color-text-secondary);
+  text-decoration: line-through;
 }
 
 .btn--secondary {

@@ -446,7 +446,14 @@ class ArticleDetailView(APIView):
         return Response(
             {
                 "article": ArticleDetailSerializer(article).data,
-                "versions": ArticleVersionSerializer(article.versions.all(), many=True).data,
+                # context carries the request so FileField(use_url=True) builds
+                # absolute URLs — without it, DRF falls back to MEDIA_URL's bare
+                # relative path, which the frontend (a different origin/port)
+                # resolves against itself instead of the API, breaking every
+                # manuscript/document link (PDF viewer included).
+                "versions": ArticleVersionSerializer(
+                    article.versions.all(), many=True, context={"request": request}
+                ).data,
                 "reviews": ReviewSerializer(article.reviews.all(), many=True).data,
                 "decisions": EditorialDecisionSerializer(article.decisions.all(), many=True).data,
             }

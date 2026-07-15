@@ -151,7 +151,8 @@
     "status": {
       "invited": "Awaiting response",
       "accepted": "Accepted",
-      "declined": "Declined"
+      "declined": "Declined",
+      "cancelled": "Cancelled"
     }
   },
   "topicCheck": {
@@ -171,7 +172,19 @@
     "articlesQueueTitle": "Topic check",
     "articlesQueueEmpty": "No articles awaiting a topic check",
     "invitationsTitle": "Sent invitations",
-    "invitationsEmpty": "No invitations have been sent yet"
+    "invitationsEmpty": "No invitations have been sent yet",
+    "invitationsReviewer": "Reviewer"
+  },
+  "reviewersPanel": {
+    "title": "Article reviewers",
+    "empty": "No reviewers assigned yet",
+    "reviewer": "Reviewer",
+    "reassign": "Assign replacement",
+    "reassignTitle": "Replace reviewer",
+    "newReviewer": "New reviewer",
+    "newReviewerPlaceholder": "Select a reviewer",
+    "reassignSubmit": "Assign",
+    "cancel": "Cancel"
   },
   "reviewerCabinet": {
     "invitationsTitle": "Invitations",

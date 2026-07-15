@@ -151,7 +151,8 @@
     "status": {
       "invited": "Ожидает ответа",
       "accepted": "Принято",
-      "declined": "Отклонено"
+      "declined": "Отклонено",
+      "cancelled": "Аннулировано"
     }
   },
   "topicCheck": {
@@ -171,7 +172,19 @@
     "articlesQueueTitle": "Проверка тематики",
     "articlesQueueEmpty": "Нет статей, ожидающих проверки тематики",
     "invitationsTitle": "Отправленные приглашения",
-    "invitationsEmpty": "Приглашения ещё не отправлялись"
+    "invitationsEmpty": "Приглашения ещё не отправлялись",
+    "invitationsReviewer": "Рецензент"
+  },
+  "reviewersPanel": {
+    "title": "Рецензенты по статье",
+    "empty": "Рецензенты ещё не назначены",
+    "reviewer": "Рецензент",
+    "reassign": "Назначить замену",
+    "reassignTitle": "Замена рецензента",
+    "newReviewer": "Новый рецензент",
+    "newReviewerPlaceholder": "Выберите рецензента",
+    "reassignSubmit": "Назначить",
+    "cancel": "Отмена"
   },
   "reviewerCabinet": {
     "invitationsTitle": "Приглашения",

@@ -107,7 +107,7 @@ class PublicIssueListView(APIView):
         year = request.query_params.get("year")
         if year:
             qs = qs.filter(year=year)
-        return Response({"items": PublicIssueListSerializer(qs, many=True).data})
+        return Response({"items": PublicIssueListSerializer(qs, many=True, context={"request": request}).data})
 
 
 class PublicIssueDetailView(APIView):
@@ -120,7 +120,7 @@ class PublicIssueDetailView(APIView):
         articles = issue.articles.filter(status=Article.PUBLISHED).order_by("title_ru")
         return Response(
             {
-                "issue": PublicIssueListSerializer(issue).data,
+                "issue": PublicIssueListSerializer(issue, context={"request": request}).data,
                 "articles": PublicArticleListSerializer(articles, many=True).data,
             }
         )

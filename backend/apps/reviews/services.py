@@ -9,6 +9,10 @@ from apps.users.models import Role, User
 
 from .models import Review
 
+# PRD section 7: "не менее двух рецензентов" — also enforced at assignment
+# time by ReviewerAssignmentInputSerializer.min_length.
+MIN_REVIEWERS = 2
+
 
 def _article_author_ids(article) -> set:
     ids = {str(article.submitted_by_id)}
@@ -49,32 +53,53 @@ def assign_reviewers(article, editor, reviewer_ids, deadline) -> list[Review]:
 
 
 def respond_to_invitation(review: Review, accepted: bool, user) -> Review:
-    """US-5: accept/decline. All-accepted -> article moves to in_review (see M3c plan decision #1)."""
+    """
+    US-5: accept/decline. Once MIN_REVIEWERS have accepted, the article moves
+    to in_review and any still-pending invitations for it are auto-cancelled
+    (M3g fix — the previous "every invited reviewer must respond" rule could
+    strand an article on "submitted" forever behind one slow/extra invitee).
+    """
     if review.reviewer_id != user.id:
         raise PermissionError("Это приглашение адресовано другому пользователю.")
     if review.invitation_status != Review.INVITED:
         raise ValueError("На это приглашение уже дан ответ.")
 
-    review.invitation_status = Review.ACCEPTED if accepted else Review.DECLINED
-    review.save(update_fields=["invitation_status"])
+    with transaction.atomic():
+        review.invitation_status = Review.ACCEPTED if accepted else Review.DECLINED
+        review.save(update_fields=["invitation_status"])
 
-    article = review.article
-    if accepted:
-        all_accepted = not article.reviews.exclude(invitation_status=Review.ACCEPTED).exists()
-        if all_accepted:
-            article.status = Article.IN_REVIEW
-            article.save(update_fields=["status"])
-    else:
-        for chief_editor in User.objects.filter(roles__code=Role.CHIEF_EDITOR).distinct():
-            Notification.objects.create(
-                user=chief_editor,
-                article=article,
-                type=Notification.STATUS_CHANGED,
-                message=(
-                    f"Рецензент {user.full_name} отказался от рецензирования статьи "
-                    f"«{article.title_ru}» — требуется замена."
-                ),
-            )
+        article = review.article
+        if accepted:
+            accepted_count = article.reviews.filter(invitation_status=Review.ACCEPTED).count()
+            if accepted_count >= MIN_REVIEWERS and article.status != Article.IN_REVIEW:
+                still_pending = list(article.reviews.filter(invitation_status=Review.INVITED))
+                for pending_review in still_pending:
+                    Notification.objects.create(
+                        user=pending_review.reviewer,
+                        article=article,
+                        type=Notification.STATUS_CHANGED,
+                        message=(
+                            f"Приглашение на рецензирование статьи «{article.title_ru}» аннулировано — "
+                            "набрано достаточное количество рецензентов."
+                        ),
+                    )
+                article.reviews.filter(invitation_status=Review.INVITED).update(
+                    invitation_status=Review.CANCELLED
+                )
+
+                article.status = Article.IN_REVIEW
+                article.save(update_fields=["status"])
+        else:
+            for chief_editor in User.objects.filter(roles__code=Role.CHIEF_EDITOR).distinct():
+                Notification.objects.create(
+                    user=chief_editor,
+                    article=article,
+                    type=Notification.STATUS_CHANGED,
+                    message=(
+                        f"Рецензент {user.full_name} отказался от рецензирования статьи "
+                        f"«{article.title_ru}» — требуется замена."
+                    ),
+                )
 
     return review
 

@@ -19,16 +19,34 @@ class ReviewArticleSummarySerializer(serializers.ModelSerializer):
 
 
 class ReviewListItemSerializer(serializers.ModelSerializer):
-    """GET /api/reviews (TS section 7, US-5) — a reviewer's own invitations, or (chief editor) all of them."""
+    """
+    GET /api/reviews (TS section 7, US-5) — a reviewer's own invitations, or
+    (chief editor) all of them. Reviewer identity is fine to expose here
+    (unlike ReviewSerializer on the article-detail endpoint, which authors
+    can also see): this endpoint is reviewer/chief-editor only, and the chief
+    editor's invitations screen needs the email to tell invitees apart.
+    """
 
     article = ReviewArticleSummarySerializer(read_only=True)
     reviewerId = serializers.UUIDField(source="reviewer_id", read_only=True)
+    reviewerFullName = serializers.CharField(source="reviewer.full_name", read_only=True)
+    reviewerEmail = serializers.CharField(source="reviewer.email", read_only=True)
     invitationStatus = serializers.CharField(source="invitation_status")
     submittedAt = serializers.DateTimeField(source="submitted_at", read_only=True)
 
     class Meta:
         model = Review
-        fields = ["id", "article", "reviewerId", "invitationStatus", "deadline", "recommendation", "submittedAt"]
+        fields = [
+            "id",
+            "article",
+            "reviewerId",
+            "reviewerFullName",
+            "reviewerEmail",
+            "invitationStatus",
+            "deadline",
+            "recommendation",
+            "submittedAt",
+        ]
 
 
 class ReviewRespondInputSerializer(serializers.Serializer):

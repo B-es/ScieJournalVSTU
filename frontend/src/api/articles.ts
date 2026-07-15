@@ -104,7 +104,7 @@ export interface EditorialDecisionItem {
 export interface ArticleReviewSummary {
   id: string;
   reviewerId: string;
-  invitationStatus: "invited" | "accepted" | "declined";
+  invitationStatus: "invited" | "accepted" | "declined" | "cancelled";
   deadline: string;
   recommendation: "" | "accept" | "revise" | "reject";
   submittedAt: string | null;
