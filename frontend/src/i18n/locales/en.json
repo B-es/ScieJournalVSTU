@@ -69,6 +69,28 @@
     "retry": "Retry",
     "error": "Failed to load data"
   },
+  "notifications": {
+    "title": "Notifications",
+    "loading": "Loading notifications…",
+    "error": "Failed to load notifications",
+    "empty": "You have no notifications yet",
+    "columns": {
+      "type": "Type",
+      "message": "Message",
+      "date": "Date",
+      "status": "Status"
+    },
+    "types": {
+      "status_changed": "Status changed",
+      "reviewer_invited": "Reviewer invited",
+      "comment_added": "New comment",
+      "decision_made": "Decision made"
+    },
+    "status": {
+      "read": "Read",
+      "unread": "New"
+    }
+  },
   "articleStatus": {
     "draft": "Draft",
     "submitted": "Under review",
