@@ -1,0 +1,332 @@
+{
+  "app": {
+    "title": "Научный журнал ВолгГТУ"
+  },
+  "nav": {
+    "home": "Главная",
+    "about": "О журнале",
+    "archive": "Архив",
+    "forAuthors": "Авторам",
+    "search": "Расширенный поиск",
+    "login": "Вход",
+    "register": "Регистрация",
+    "logout": "Выйти"
+  },
+  "footer": {
+    "openAccessPolicy": "Политика открытого доступа",
+    "jobs": "Работа в ScieJournalVSTU",
+    "guidelines": "Руководящие принципы",
+    "guidelinesForAuthors": "Для авторов",
+    "guidelinesForReviewers": "Для рецензентов",
+    "guidelinesForEditors": "Для редакторов",
+    "termsOfUse": "Условия использования",
+    "privacyPolicy": "Политика конфиденциальности",
+    "termsAndConditions": "Условия и положения",
+    "help": "Помощь и поддержка"
+  },
+  "auth": {
+    "login": {
+      "title": "Вход",
+      "email": "Email",
+      "password": "Пароль",
+      "submit": "Войти",
+      "forgotPassword": "Забыли пароль?",
+      "noAccount": "Нет аккаунта?",
+      "registerLink": "Зарегистрироваться",
+      "error": "Неверный email или пароль."
+    },
+    "register": {
+      "title": "Регистрация",
+      "fullName": "ФИО",
+      "email": "Email",
+      "password": "Пароль",
+      "submit": "Зарегистрироваться",
+      "haveAccount": "Уже есть аккаунт?",
+      "loginLink": "Войти",
+      "emailTaken": "Пользователь с таким email уже зарегистрирован.",
+      "error": "Не удалось зарегистрироваться. Проверьте введённые данные."
+    },
+    "validation": {
+      "required": "Обязательное поле",
+      "email": "Введите корректный email",
+      "minLength": "Минимум {min} символов"
+    }
+  },
+  "cabinet": {
+    "nav": {
+      "myArticles": "Мои статьи",
+      "submitArticle": "Подать статью",
+      "reviewArticles": "Статьи на рецензию",
+      "invitations": "Приглашения",
+      "manageArticles": "Управление статьями",
+      "decisions": "Принятие решения",
+      "notifications": "Уведомления",
+      "settings": "Настройки"
+    }
+  },
+  "common": {
+    "loading": "Загрузка…",
+    "retry": "Повторить",
+    "error": "Не удалось загрузить данные"
+  },
+  "notifications": {
+    "title": "Уведомления",
+    "loading": "Загружаем уведомления…",
+    "error": "Не удалось загрузить уведомления",
+    "empty": "У вас пока нет уведомлений",
+    "columns": {
+      "type": "Тип",
+      "message": "Сообщение",
+      "date": "Дата",
+      "status": "Статус"
+    },
+    "types": {
+      "status_changed": "Статус изменён",
+      "reviewer_invited": "Приглашение рецензенту",
+      "comment_added": "Новый комментарий",
+      "decision_made": "Решение принято"
+    },
+    "status": {
+      "read": "Прочитано",
+      "unread": "Новое"
+    }
+  },
+  "articleStatus": {
+    "draft": "Черновик",
+    "submitted": "На рассмотрении",
+    "needs_revision": "Требуется доработка",
+    "rejected": "Отклонена",
+    "in_review": "Рецензируется",
+    "accepted": "Принята к публикации",
+    "published": "Опубликована"
+  },
+  "articleForm": {
+    "steps": {
+      "metadata": "Метаданные",
+      "files": "Файлы",
+      "review": "Проверка"
+    },
+    "titleRu": "Название (RU)",
+    "titleEn": "Название (EN)",
+    "abstractRu": "Аннотация (RU)",
+    "abstractEn": "Аннотация (EN)",
+    "keywordsRu": "Ключевые слова (RU, через запятую)",
+    "keywordsEn": "Ключевые слова (EN, через запятую)",
+    "topic": "Направление",
+    "authorsTitle": "Авторы",
+    "authorFullName": "ФИО",
+    "authorAffiliation": "Место работы/учёбы",
+    "authorEmail": "Email",
+    "addAuthor": "Добавить автора",
+    "removeAuthor": "Удалить",
+    "manuscriptFile": "Файл рукописи",
+    "documentsTitle": "Сопроводительные документы",
+    "documentType": "Тип документа",
+    "addDocument": "Добавить документ",
+    "removeDocument": "Удалить",
+    "back": "Назад",
+    "next": "Далее",
+    "submit": "Отправить",
+    "savedDraft": "Черновик сохранён",
+    "saving": "Сохранение…",
+    "reviewHint": "Проверьте данные перед отправкой на рассмотрение.",
+    "submitError": "Не удалось отправить статью. Проверьте заполненные поля."
+  },
+  "articlesTable": {
+    "title": "Мои статьи",
+    "submitButton": "Подать статью",
+    "filterAll": "Все статусы",
+    "empty": "Вы ещё не подавали статьи",
+    "emptyCta": "Подать первую статью",
+    "columnTitle": "Название",
+    "columnStatus": "Статус",
+    "columnDate": "Дата подачи",
+    "columnAction": "Действие",
+    "open": "Открыть"
+  },
+  "articlePage": {
+    "statusHistory": "История статусов",
+    "notFound": "Статья не найдена",
+    "continueDraft": "Продолжить заполнение",
+    "readonlyNotice": "Статья отправлена на рассмотрение — редактирование пока недоступно.",
+    "techEditorComment": "Комментарий технического редактора",
+    "editorComment": "Комментарий главного редактора",
+    "rejectedNotice": "Статья отклонена.",
+    "acceptedNotice": "Статья принята к публикации.",
+    "publishedNotice": "Статья опубликована.",
+    "doiLabel": "DOI",
+    "issueLabel": "Выпуск №"
+  },
+  "articleRevision": {
+    "title": "Загрузить исправленную версию",
+    "authorComment": "Комментарий (ответ на замечания)",
+    "submit": "Отправить исправленную версию",
+    "error": "Не удалось загрузить исправленную версию."
+  },
+  "invitation": {
+    "deadline": "Срок ответа",
+    "daysLeft": "осталось {n} дн.",
+    "overdue": "Просрочено",
+    "accept": "Принять",
+    "decline": "Отказаться",
+    "error": "Не удалось отправить ответ на приглашение.",
+    "status": {
+      "invited": "Ожидает ответа",
+      "accepted": "Принято",
+      "declined": "Отклонено",
+      "cancelled": "Аннулировано"
+    }
+  },
+  "topicCheck": {
+    "title": "Проверка тематики",
+    "approveAndAssign": "Соответствует тематике — назначить рецензентов",
+    "reject": "Отклонить",
+    "comment": "Комментарий",
+    "commentRequired": "Комментарий обязателен при отклонении",
+    "reviewersTitle": "Рецензенты (минимум 2)",
+    "reviewersMinError": "Выберите не менее двух рецензентов",
+    "deadline": "Срок рецензирования",
+    "submit": "Назначить рецензентов",
+    "success": "Рецензенты назначены",
+    "error": "Не удалось выполнить действие."
+  },
+  "chiefEditor": {
+    "articlesQueueTitle": "Проверка тематики",
+    "articlesQueueEmpty": "Нет статей, ожидающих проверки тематики",
+    "invitationsTitle": "Отправленные приглашения",
+    "invitationsEmpty": "Приглашения ещё не отправлялись",
+    "invitationsReviewer": "Рецензент"
+  },
+  "reviewersPanel": {
+    "title": "Рецензенты по статье",
+    "empty": "Рецензенты ещё не назначены",
+    "reviewer": "Рецензент",
+    "reassign": "Назначить замену",
+    "reassignTitle": "Замена рецензента",
+    "newReviewer": "Новый рецензент",
+    "newReviewerPlaceholder": "Выберите рецензента",
+    "reassignSubmit": "Назначить",
+    "cancel": "Отмена"
+  },
+  "reviewerCabinet": {
+    "invitationsTitle": "Приглашения",
+    "invitationsEmpty": "Новых приглашений пока нет",
+    "articlesTitle": "Статьи на рецензию",
+    "articlesEmpty": "Нет принятых статей на рецензирование"
+  },
+  "pdfViewer": {
+    "title": "Файл рукописи",
+    "confidential": "Конфиденциально — доступно только рецензенту и редакции",
+    "download": "Скачать PDF"
+  },
+  "reviewForm": {
+    "title": "Форма рецензии",
+    "recommendationLabel": "Рекомендация",
+    "recommendationPlaceholder": "Выберите рекомендацию",
+    "recommendation": {
+      "accept": "Принять",
+      "revise": "На доработку",
+      "reject": "Отклонить"
+    },
+    "commentsForAuthor": "Комментарии автору",
+    "commentsForEditor": "Комментарии редактору (конфиденциально)",
+    "reviewFile": "Файл рецензии (опционально)",
+    "submit": "Отправить рецензию",
+    "alreadySubmitted": "Рецензия отправлена. Рекомендация:",
+    "error": "Не удалось отправить рецензию."
+  },
+  "reviewPage": {
+    "notFound": "Рецензия не найдена"
+  },
+  "decisionForm": {
+    "title": "Принятие решения",
+    "waiting": "Ожидаем рецензию от {submitted} из {total} рецензентов",
+    "reviewsTitle": "Рецензии",
+    "recommendation": {
+      "accept": "Принять",
+      "revise": "На доработку",
+      "reject": "Отклонить"
+    },
+    "notSubmittedYet": "Рецензия ещё не подана",
+    "decisionLabel": "Решение",
+    "decisionPlaceholder": "Выберите решение",
+    "comment": "Комментарий (обязательно для любого решения)",
+    "submit": "Отправить решение",
+    "confirmRejectTitle": "Подтвердите отклонение статьи",
+    "confirmRejectBody": "Статья будет отклонена, автор получит уведомление с вашим комментарием.",
+    "confirmRejectButton": "Отклонить статью",
+    "cancel": "Отмена",
+    "error": "Не удалось отправить решение."
+  },
+  "reviewerFeedback": {
+    "title": "Отзывы рецензентов"
+  },
+  "home": {
+    "seoDescription": "Научные статьи и выпуски в открытом доступе",
+    "latestIssue": "Последний выпуск",
+    "recentArticles": "Последние статьи",
+    "noArticles": "Пока нет опубликованных статей"
+  },
+  "archivePage": {
+    "title": "Архив выпусков",
+    "allYears": "Все годы",
+    "empty": "Выпуски не найдены"
+  },
+  "issuePage": {
+    "notFound": "Выпуск не найден",
+    "numberLabel": "Выпуск №{n}",
+    "contents": "Содержание",
+    "empty": "В этом выпуске пока нет опубликованных статей"
+  },
+  "publicArticlePage": {
+    "notFound": "Статья не найдена или снята с публикации",
+    "abstract": "Аннотация",
+    "keywords": "Ключевые слова",
+    "pages": "Страниц"
+  },
+  "searchPage": {
+    "title": "Расширенный поиск",
+    "queryPlaceholder": "Название, ключевые слова…",
+    "authorPlaceholder": "Автор",
+    "topicPlaceholder": "Направление",
+    "submit": "Найти",
+    "empty": "По вашему запросу ничего не найдено"
+  },
+  "citation": {
+    "title": "Цитирование",
+    "format": {
+      "gost": "ГОСТ",
+      "apa": "APA",
+      "bibtex": "BibTeX"
+    },
+    "copy": "Копировать",
+    "copied": "Ссылка скопирована",
+    "copyError": "Не удалось скопировать ссылку",
+    "error": "Не удалось получить ссылку для цитирования"
+  },
+  "articleCard": {
+    "openAccess": "Открытый доступ",
+    "pages": "{n} стр."
+  },
+  "issueCard": {
+    "numberLabel": "Выпуск №{n}",
+    "articlesCount": "Статей: {n}",
+    "pagesCount": "Страниц: {n}",
+    "authorsCount": "Авторов: {n}",
+    "openIssue": "Открыть выпуск"
+  },
+  "pagination": {
+    "label": "Постраничная навигация",
+    "prev": "Назад",
+    "next": "Вперёд",
+    "pageOf": "Страница {page} из {total}"
+  },
+  "aboutPage": {
+    "title": "О журнале",
+    "editorialBoard": "Редакционная коллегия"
+  },
+  "forAuthorsPage": {
+    "title": "Требования к авторам",
+    "empty": "Требования к авторам пока не опубликованы"
+  }
+}

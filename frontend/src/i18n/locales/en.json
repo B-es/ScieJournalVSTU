@@ -1,0 +1,332 @@
+{
+  "app": {
+    "title": "VSTU Scientific Journal"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About the Journal",
+    "archive": "Archive",
+    "forAuthors": "For Authors",
+    "search": "Advanced Search",
+    "login": "Log In",
+    "register": "Register",
+    "logout": "Log Out"
+  },
+  "footer": {
+    "openAccessPolicy": "Open Access Policy",
+    "jobs": "Careers at ScieJournalVSTU",
+    "guidelines": "Guidelines",
+    "guidelinesForAuthors": "For Authors",
+    "guidelinesForReviewers": "For Reviewers",
+    "guidelinesForEditors": "For Editors",
+    "termsOfUse": "Terms of Use",
+    "privacyPolicy": "Privacy Policy",
+    "termsAndConditions": "Terms and Conditions",
+    "help": "Help & Support"
+  },
+  "auth": {
+    "login": {
+      "title": "Log In",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Log In",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Register",
+      "error": "Incorrect email or password."
+    },
+    "register": {
+      "title": "Register",
+      "fullName": "Full name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Register",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Log in",
+      "emailTaken": "A user with this email is already registered.",
+      "error": "Could not register. Please check the details you entered."
+    },
+    "validation": {
+      "required": "This field is required",
+      "email": "Enter a valid email",
+      "minLength": "At least {min} characters"
+    }
+  },
+  "cabinet": {
+    "nav": {
+      "myArticles": "My Articles",
+      "submitArticle": "Submit Article",
+      "reviewArticles": "Articles to Review",
+      "invitations": "Invitations",
+      "manageArticles": "Manage Articles",
+      "decisions": "Decisions",
+      "notifications": "Notifications",
+      "settings": "Settings"
+    }
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Retry",
+    "error": "Failed to load data"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "loading": "Loading notifications…",
+    "error": "Failed to load notifications",
+    "empty": "You have no notifications yet",
+    "columns": {
+      "type": "Type",
+      "message": "Message",
+      "date": "Date",
+      "status": "Status"
+    },
+    "types": {
+      "status_changed": "Status changed",
+      "reviewer_invited": "Reviewer invited",
+      "comment_added": "New comment",
+      "decision_made": "Decision made"
+    },
+    "status": {
+      "read": "Read",
+      "unread": "New"
+    }
+  },
+  "articleStatus": {
+    "draft": "Draft",
+    "submitted": "Under review",
+    "needs_revision": "Needs revision",
+    "rejected": "Rejected",
+    "in_review": "In peer review",
+    "accepted": "Accepted for publication",
+    "published": "Published"
+  },
+  "articleForm": {
+    "steps": {
+      "metadata": "Metadata",
+      "files": "Files",
+      "review": "Review"
+    },
+    "titleRu": "Title (RU)",
+    "titleEn": "Title (EN)",
+    "abstractRu": "Abstract (RU)",
+    "abstractEn": "Abstract (EN)",
+    "keywordsRu": "Keywords (RU, comma-separated)",
+    "keywordsEn": "Keywords (EN, comma-separated)",
+    "topic": "Topic",
+    "authorsTitle": "Authors",
+    "authorFullName": "Full name",
+    "authorAffiliation": "Affiliation",
+    "authorEmail": "Email",
+    "addAuthor": "Add author",
+    "removeAuthor": "Remove",
+    "manuscriptFile": "Manuscript file",
+    "documentsTitle": "Supporting documents",
+    "documentType": "Document type",
+    "addDocument": "Add document",
+    "removeDocument": "Remove",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "savedDraft": "Draft saved",
+    "saving": "Saving…",
+    "reviewHint": "Review the data before submitting for review.",
+    "submitError": "Could not submit the article. Please check the filled-in fields."
+  },
+  "articlesTable": {
+    "title": "My Articles",
+    "submitButton": "Submit Article",
+    "filterAll": "All statuses",
+    "empty": "You haven't submitted any articles yet",
+    "emptyCta": "Submit your first article",
+    "columnTitle": "Title",
+    "columnStatus": "Status",
+    "columnDate": "Submitted",
+    "columnAction": "Action",
+    "open": "Open"
+  },
+  "articlePage": {
+    "statusHistory": "Status history",
+    "notFound": "Article not found",
+    "continueDraft": "Continue editing",
+    "readonlyNotice": "The article has been submitted for review — editing isn't available yet.",
+    "techEditorComment": "Technical editor's comment",
+    "editorComment": "Chief editor's comment",
+    "rejectedNotice": "The article has been rejected.",
+    "acceptedNotice": "The article has been accepted for publication.",
+    "publishedNotice": "The article has been published.",
+    "doiLabel": "DOI",
+    "issueLabel": "Issue No."
+  },
+  "articleRevision": {
+    "title": "Upload a corrected version",
+    "authorComment": "Comment (response to the remarks)",
+    "submit": "Submit corrected version",
+    "error": "Could not upload the corrected version."
+  },
+  "invitation": {
+    "deadline": "Response deadline",
+    "daysLeft": "{n} day(s) left",
+    "overdue": "Overdue",
+    "accept": "Accept",
+    "decline": "Decline",
+    "error": "Could not send the response to the invitation.",
+    "status": {
+      "invited": "Awaiting response",
+      "accepted": "Accepted",
+      "declined": "Declined",
+      "cancelled": "Cancelled"
+    }
+  },
+  "topicCheck": {
+    "title": "Topic check",
+    "approveAndAssign": "Fits the scope — assign reviewers",
+    "reject": "Reject",
+    "comment": "Comment",
+    "commentRequired": "A comment is required when rejecting",
+    "reviewersTitle": "Reviewers (at least 2)",
+    "reviewersMinError": "Select at least two reviewers",
+    "deadline": "Review deadline",
+    "submit": "Assign reviewers",
+    "success": "Reviewers assigned",
+    "error": "Could not complete the action."
+  },
+  "chiefEditor": {
+    "articlesQueueTitle": "Topic check",
+    "articlesQueueEmpty": "No articles awaiting a topic check",
+    "invitationsTitle": "Sent invitations",
+    "invitationsEmpty": "No invitations have been sent yet",
+    "invitationsReviewer": "Reviewer"
+  },
+  "reviewersPanel": {
+    "title": "Article reviewers",
+    "empty": "No reviewers assigned yet",
+    "reviewer": "Reviewer",
+    "reassign": "Assign replacement",
+    "reassignTitle": "Replace reviewer",
+    "newReviewer": "New reviewer",
+    "newReviewerPlaceholder": "Select a reviewer",
+    "reassignSubmit": "Assign",
+    "cancel": "Cancel"
+  },
+  "reviewerCabinet": {
+    "invitationsTitle": "Invitations",
+    "invitationsEmpty": "No new invitations yet",
+    "articlesTitle": "Articles to review",
+    "articlesEmpty": "No accepted articles to review yet"
+  },
+  "pdfViewer": {
+    "title": "Manuscript file",
+    "confidential": "Confidential — visible only to the reviewer and the editorial board",
+    "download": "Download PDF"
+  },
+  "reviewForm": {
+    "title": "Review form",
+    "recommendationLabel": "Recommendation",
+    "recommendationPlaceholder": "Select a recommendation",
+    "recommendation": {
+      "accept": "Accept",
+      "revise": "Needs revision",
+      "reject": "Reject"
+    },
+    "commentsForAuthor": "Comments for the author",
+    "commentsForEditor": "Comments for the editor (confidential)",
+    "reviewFile": "Review file (optional)",
+    "submit": "Submit review",
+    "alreadySubmitted": "Review submitted. Recommendation:",
+    "error": "Could not submit the review."
+  },
+  "reviewPage": {
+    "notFound": "Review not found"
+  },
+  "decisionForm": {
+    "title": "Editorial decision",
+    "waiting": "Waiting for {submitted} of {total} reviews",
+    "reviewsTitle": "Reviews",
+    "recommendation": {
+      "accept": "Accept",
+      "revise": "Needs revision",
+      "reject": "Reject"
+    },
+    "notSubmittedYet": "Review not submitted yet",
+    "decisionLabel": "Decision",
+    "decisionPlaceholder": "Select a decision",
+    "comment": "Comment (required for any decision)",
+    "submit": "Submit decision",
+    "confirmRejectTitle": "Confirm rejecting the article",
+    "confirmRejectBody": "The article will be rejected and the author will be notified with your comment.",
+    "confirmRejectButton": "Reject article",
+    "cancel": "Cancel",
+    "error": "Could not submit the decision."
+  },
+  "reviewerFeedback": {
+    "title": "Reviewer feedback"
+  },
+  "home": {
+    "seoDescription": "Open-access scientific articles and issues",
+    "latestIssue": "Latest issue",
+    "recentArticles": "Recent articles",
+    "noArticles": "No published articles yet"
+  },
+  "archivePage": {
+    "title": "Issue archive",
+    "allYears": "All years",
+    "empty": "No issues found"
+  },
+  "issuePage": {
+    "notFound": "Issue not found",
+    "numberLabel": "Issue No. {n}",
+    "contents": "Contents",
+    "empty": "This issue has no published articles yet"
+  },
+  "publicArticlePage": {
+    "notFound": "Article not found or unpublished",
+    "abstract": "Abstract",
+    "keywords": "Keywords",
+    "pages": "Pages"
+  },
+  "searchPage": {
+    "title": "Advanced search",
+    "queryPlaceholder": "Title, keywords…",
+    "authorPlaceholder": "Author",
+    "topicPlaceholder": "Topic",
+    "submit": "Search",
+    "empty": "No results found for your query"
+  },
+  "citation": {
+    "title": "Cite this article",
+    "format": {
+      "gost": "GOST",
+      "apa": "APA",
+      "bibtex": "BibTeX"
+    },
+    "copy": "Copy",
+    "copied": "Citation copied",
+    "copyError": "Could not copy the citation",
+    "error": "Could not load the citation"
+  },
+  "articleCard": {
+    "openAccess": "Open Access",
+    "pages": "{n} pp."
+  },
+  "issueCard": {
+    "numberLabel": "Issue No. {n}",
+    "articlesCount": "Articles: {n}",
+    "pagesCount": "Pages: {n}",
+    "authorsCount": "Authors: {n}",
+    "openIssue": "Open issue"
+  },
+  "pagination": {
+    "label": "Pagination",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}"
+  },
+  "aboutPage": {
+    "title": "About the Journal",
+    "editorialBoard": "Editorial Board"
+  },
+  "forAuthorsPage": {
+    "title": "Guidelines for Authors",
+    "empty": "Guidelines for authors have not been published yet"
+  }
+}

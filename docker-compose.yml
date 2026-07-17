@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-scijournal}
+      POSTGRES_USER: ${POSTGRES_USER:-scijournal}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-scijournal}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-scijournal}:${POSTGRES_PASSWORD:-scijournal}@db:5432/${POSTGRES_DB:-scijournal}
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+
+volumes:
+  db_data:
