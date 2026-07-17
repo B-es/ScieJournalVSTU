@@ -32,6 +32,7 @@ onMounted(load);
 <template>
   <div>
     <h2>{{ t("articlesTable.title") }}</h2>
+    <br></br>
     <ArticlesTable
       :items="items"
       :loading="loading"

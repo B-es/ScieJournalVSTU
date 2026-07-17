@@ -13,6 +13,7 @@ async function handleSubmitted(articleId: string) {
 <template>
   <div>
     <h2>{{ t("cabinet.nav.submitArticle") }}</h2>
+    <br></br>
     <ArticleSubmitForm @submitted="handleSubmitted" />
   </div>
 </template>

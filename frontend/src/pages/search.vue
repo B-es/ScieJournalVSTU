@@ -53,7 +53,7 @@ watch(page, search);
 <template>
   <div>
     <h1>{{ t("searchPage.title") }}</h1>
-
+    <br></br>
     <form class="search-form" @submit.prevent="onSubmit">
       <input v-model="query" type="text" class="search-form__input" :placeholder="t('searchPage.queryPlaceholder')" >
       <input v-model="author" type="text" class="search-form__input" :placeholder="t('searchPage.authorPlaceholder')" >

@@ -49,7 +49,7 @@ async function handleSubmit() {
 <template>
   <div class="auth-page">
     <h1>{{ t("auth.register.title") }}</h1>
-
+    <br></br>
     <form class="auth-form" novalidate @submit.prevent="handleSubmit">
       <AppFormField v-model="fullName" :label="t('auth.register.fullName')" required autocomplete="name" :error="fieldErrors.fullName" />
       <AppFormField

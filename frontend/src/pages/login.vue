@@ -44,7 +44,7 @@ async function handleSubmit() {
 <template>
   <div class="auth-page">
     <h1>{{ t("auth.login.title") }}</h1>
-
+    <br></br>
     <form class="auth-form" novalidate @submit.prevent="handleSubmit">
       <AppFormField
         v-model="email"

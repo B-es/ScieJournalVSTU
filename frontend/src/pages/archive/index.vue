@@ -38,7 +38,7 @@ watch(yearFilter, load);
 <template>
   <div>
     <h1>{{ t("archivePage.title") }}</h1>
-
+    <br></br>
     <div class="archive-toolbar">
       <select v-model="yearFilter" class="archive-toolbar__filter">
         <option value="">{{ t("archivePage.allYears") }}</option>

@@ -32,7 +32,7 @@ onMounted(load);
 <template>
   <div>
     <h1>{{ t("forAuthorsPage.title") }}</h1>
-
+    <br></br>
     <p v-if="loading">{{ t("common.loading") }}</p>
     <div v-else-if="error">
       <p>{{ error }}</p>
