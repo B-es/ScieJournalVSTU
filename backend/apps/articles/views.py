@@ -454,7 +454,7 @@ class ArticleDetailView(APIView):
                 "versions": ArticleVersionSerializer(
                     article.versions.all(), many=True, context={"request": request}
                 ).data,
-                "reviews": ReviewSerializer(article.reviews.all(), many=True).data,
+                "reviews": ReviewSerializer(article.reviews.all(), many=True, context={"request": request}).data,
                 "decisions": EditorialDecisionSerializer(article.decisions.all(), many=True).data,
             }
         )

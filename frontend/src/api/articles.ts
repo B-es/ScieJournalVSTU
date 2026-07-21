@@ -104,12 +104,15 @@ export interface EditorialDecisionItem {
 export interface ArticleReviewSummary {
   id: string;
   reviewerId: string;
+  reviewerName?: string;
   invitationStatus: "invited" | "accepted" | "declined" | "cancelled";
   deadline: string;
   recommendation: "" | "accept" | "revise" | "reject";
   submittedAt: string | null;
   /** Only this sub-field of the reviewer's form data — never commentsForEditor (M3e plan #5). */
   commentsForAuthor: string;
+  reviewFileUrl?: string | null;
+  reviewFileName?: string | null;
 }
 
 export interface ArticleDetailResponse {
