@@ -71,14 +71,32 @@ class ReviewSerializer(serializers.ModelSerializer):
     # decision #5.
     commentsForAuthor = serializers.SerializerMethodField()
 
+    reviewFileUrl = serializers.SerializerMethodField()
+    reviewFileName = serializers.SerializerMethodField()
+
     class Meta:
         model = Review
-        fields = ["id", "reviewerId", "invitationStatus", "deadline", "recommendation", "submittedAt", "commentsForAuthor"]
+        fields = ["id", "reviewerId", "invitationStatus", "deadline", "recommendation", "submittedAt", "commentsForAuthor", "reviewFileUrl", "reviewFileName"]
 
     def get_commentsForAuthor(self, obj):
         if not obj.review_form_data:
             return ""
         return obj.review_form_data.get("commentsForAuthor", "")
+    
+    def get_reviewFileUrl(self, obj):
+        """Возвращает URL файла рецензии, если он есть"""
+        if obj.review_file:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.review_file.url)
+            return obj.review_file.url
+        return None
+    
+    def get_reviewFileName(self, obj):
+        """Возвращает имя файла рецензии"""
+        if obj.review_file:
+            return obj.review_file.name.split('/')[-1]
+        return None
 
 
 class EditorialDecisionSerializer(serializers.ModelSerializer):

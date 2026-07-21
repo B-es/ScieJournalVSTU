@@ -7,8 +7,10 @@ two entry points.
 
 import uuid
 
+from django.db import transaction
 from django.db.models import Max
 from django.utils import timezone
+from datetime import timedelta
 
 from apps.editorial.models import EditorialDecision
 from apps.notifications.models import Notification
@@ -140,7 +142,13 @@ def add_revision_version(
     document_types,
     author_comment: str,
 ) -> ArticleVersion:
-    """US-3/US-7 revise outcome: author uploads a corrected version after being sent back for revision."""
+    """
+    US-3/US-7 revise outcome: author uploads a corrected version after being sent back for revision.
+    
+    Вариант Б: Перенос старых рецензий (обновление существующих, без удаления)
+    """
+    
+    # 1. Создаем новую версию
     next_number = (article.versions.aggregate(Max("version_number"))["version_number__max"] or 0) + 1
     version = ArticleVersion.objects.create(
         article=article,
@@ -148,33 +156,106 @@ def add_revision_version(
         manuscript_file=manuscript_file,
         author_comment=author_comment or "",
     )
+    
+    # 2. Добавляем документы к новой версии
     for idx, file in enumerate(documents_files or []):
         doc_type = document_types[idx] if document_types and idx < len(document_types) else ""
         version.documents.create(doc_type=doc_type, file=file)
 
-    # PRD section 7: a resubmitted revision returns to the stage it was sent
-    # back from — branch on the most recent "revise" EditorialDecision.
-    last_revise = article.decisions.filter(decision=EditorialDecision.REVISE).order_by("-created_at").first()
+    # 3. Определяем, откуда пришел revise (из рецензирования или проверки комплектности)
+    last_revise = article.decisions.filter(
+        decision=EditorialDecision.REVISE
+    ).order_by("-created_at").first()
 
     if last_revise and last_revise.stage == EditorialDecision.REVIEW_DECISION:
-        # US-8: sent back after peer review — old reviews no longer apply to
-        # the new version. Deleting rather than flagging them "superseded"
-        # (no such field on Review, and adding one now is more than closing
-        # US-7's revise outcome calls for — see M3e plan #4). The chief
-        # editor re-assigns reviewers, same or new, via the queue they
-        # already have (M3c) once this makes `article.reviews` empty again.
-        article.reviews.all().delete()
-        article.status = Article.SUBMITTED
-        article.save(update_fields=["status"])
-        for chief_editor in User.objects.filter(roles__code=Role.CHIEF_EDITOR).distinct():
+        # --- ВАРИАНТ Б: Перенос старых рецензий ---
+        
+        with transaction.atomic():
+            # 3.1 Получаем рецензентов, которые уже приняли приглашение
+            accepted_reviews = article.reviews.filter(
+                invitation_status=Review.ACCEPTED
+            )
+            
+            # 3.2 Сохраняем информацию о рецензентах для уведомлений
+            reviewer_ids = list(accepted_reviews.values_list('reviewer_id', flat=True))
+            reviewers = User.objects.filter(id__in=reviewer_ids)
+            
+            # 3.3 Обновляем каждую принятую рецензию
+            new_deadline = timezone.now().date() + timedelta(days=30)
+            
+            for review in accepted_reviews:
+                # Сбрасываем все данные рецензии
+                review.submitted_at = None
+                review.recommendation = ""
+                review.review_form_data = None
+                review.review_file = None
+                # Устанавливаем новый дедлайн
+                review.deadline = new_deadline
+                # Важно! Оставляем статус ACCEPTED (рецензент уже принял приглашение)
+                review.save()
+                
+                # Отправляем уведомление рецензенту
+                Notification.objects.create(
+                    user=review.reviewer,
+                    article=article,
+                    type=Notification.REVIEWER_INVITED,
+                    message=(
+                        f"Автор загрузил исправленную версию статьи «{article.title_ru}». "
+                        f"Пожалуйста, отправьте новую рецензию до {new_deadline.strftime('%d.%m.%Y')}."
+                    )
+                )
+            
+            # 3.4 Определяем статус статьи
+            accepted_count = accepted_reviews.count()
+            
+            if accepted_count >= 2:
+                # Если у нас 2+ рецензента, статья сразу переходит в IN_REVIEW
+                article.status = Article.IN_REVIEW
+                # Уведомляем главных редакторов, что рецензенты переназначены
+                for chief_editor in User.objects.filter(roles__code=Role.CHIEF_EDITOR).distinct():
+                    Notification.objects.create(
+                        user=chief_editor,
+                        article=article,
+                        type=Notification.STATUS_CHANGED,
+                        message=(
+                            f"Автор загрузил исправленную версию статьи «{article.title_ru}». "
+                            f"{accepted_count} рецензентов автоматически переназначены. "
+                            "Ожидайте новых рецензий."
+                        )
+                    )
+            else:
+                # Если меньше 2 рецензентов, возвращаем в очередь главного редактора
+                article.status = Article.SUBMITTED
+                article.completeness_approved_at = None
+                
+                # Уведомляем главных редакторов о необходимости назначить рецензентов
+                for chief_editor in User.objects.filter(roles__code=Role.CHIEF_EDITOR).distinct():
+                    Notification.objects.create(
+                        user=chief_editor,
+                        article=article,
+                        type=Notification.STATUS_CHANGED,
+                        message=(
+                            f"Автор загрузил исправленную версию статьи «{article.title_ru}». "
+                            f"Требуется назначить {2 - accepted_count} рецензентов (принято: {accepted_count})."
+                        )
+                    )
+            
+            # 3.5 Уведомляем автора
             Notification.objects.create(
-                user=chief_editor,
+                user=article.submitted_by,
                 article=article,
                 type=Notification.STATUS_CHANGED,
-                message=f"Автор загрузил исправленную версию статьи «{article.title_ru}» — назначьте рецензентов заново.",
+                message=(
+                    f"Исправленная версия статьи «{article.title_ru}» отправлена на повторное рецензирование. "
+                    f"{'Рецензенты уведомлены.' if accepted_count >= 2 else 'Ожидайте назначения рецензентов.'}"
+                )
             )
+            
+            # 3.6 Сохраняем статью
+            article.save(update_fields=["status", "completeness_approved_at"])
+            
     else:
-        # Default / completeness-check path (M3b): back to the tech-editor queue.
+        # Если revise пришел из проверки комплектности (M3b)
         article.status = Article.SUBMITTED
         article.completeness_approved_at = None
         article.save(update_fields=["status", "completeness_approved_at"])
