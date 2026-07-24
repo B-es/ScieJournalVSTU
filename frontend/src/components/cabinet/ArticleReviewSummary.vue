@@ -1,5 +1,3 @@
-<!-- frontend/src/components/cabinet/ArticleReviewSummary.vue -->
-
 <script setup lang="ts">
 import { FileText, Download, CheckCircle, XCircle, RotateCcw, Clock } from "lucide-vue-next";
 import type { ArticleReviewSummary } from "~/api/articles";
@@ -49,6 +47,45 @@ const formattedDate = computed(() => {
 
 const hasReviewFile = computed(() => !!props.review.reviewFileUrl);
 const hasComments = computed(() => !!props.review.commentsForAuthor);
+
+const evaluationLabels = {
+    introduction: t('reviewEvaluation.introduction'),
+    research_design: t('reviewEvaluation.researchDesign'),
+    methods: t('reviewEvaluation.methods'),
+    results: t('reviewEvaluation.results'),
+    conclusions: t('reviewEvaluation.conclusions'),
+    figures_tables: t('reviewEvaluation.figuresTables'),
+};
+
+const ratingLabels = {
+    originality: t('reviewEvaluation.originality'),
+    significance: t('reviewEvaluation.significance'),
+    presentation: t('reviewEvaluation.presentation'),
+    scientific_validity: t('reviewEvaluation.scientificValidity'),
+    reader_interest: t('reviewEvaluation.readerInterest'),
+};
+
+const evaluationValueLabels = {
+    yes: t('reviewEvaluation.yes'),
+    improve: t('reviewEvaluation.canImprove'),
+    required: t('reviewEvaluation.required'),
+    na: t('reviewEvaluation.notApplicable'),
+};
+
+const ratingValueLabels = {
+    high: t('reviewEvaluation.high'),
+    medium: t('reviewEvaluation.medium'),
+    low: t('reviewEvaluation.low'),
+    no_answer: t('reviewEvaluation.noAnswer'),
+};
+
+const hasEvaluation = computed(() => {
+    return props.review.evaluationRating && Object.keys(props.review.evaluationRating).length > 0;
+});
+
+const hasRating = computed(() => {
+    return props.review.articleRating && Object.keys(props.review.articleRating).length > 0;
+});
 </script>
 
 <template>
@@ -67,6 +104,48 @@ const hasComments = computed(() => !!props.review.commentsForAuthor);
             <div v-if="hasComments" class="review-summary__comments">
                 <strong>{{ t('reviewForm.commentsForAuthor') }}:</strong>
                 <p class="review-summary__comments-text">{{ review.commentsForAuthor }}</p>
+            </div>
+
+            <div v-if="hasEvaluation" class="review-summary__evaluation">
+                <h4 class="review-summary__section-title">{{ t('reviewEvaluation.evaluationTitle') }}</h4>
+                <table class="review-summary__evaluation-table">
+                    <tr v-for="(value, key) in review.evaluationRating" :key="key">
+                        <td class="review-summary__evaluation-label">{{ evaluationLabels[key] || key }}</td>
+                        <td class="review-summary__evaluation-value">{{ evaluationValueLabels[value] || value }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div v-if="review.languageQuality" class="review-summary__field">
+                <strong>{{ t('reviewEvaluation.languageQuality') }}:</strong>
+                <span>{{ 
+                    review.languageQuality === 'excellent' 
+                        ? t('reviewEvaluation.languageExcellent') 
+                        : t('reviewEvaluation.languageNeedsImprovement') 
+                }}</span>
+            </div>
+
+            <div class="review-summary__field">
+                <strong>{{ t('reviewEvaluation.conflictOfInterest') }}:</strong>
+                <span>{{ review.conflictOfInterest ? t('reviewEvaluation.yes') : t('reviewEvaluation.no') }}</span>
+            </div>
+            <div class="review-summary__field">
+                <strong>{{ t('reviewEvaluation.plagiarismDetected') }}:</strong>
+                <span>{{ review.plagiarismDetected ? t('reviewEvaluation.yes') : t('reviewEvaluation.no') }}</span>
+            </div>
+            <div class="review-summary__field">
+                <strong>{{ t('reviewEvaluation.ethicalIssues') }}:</strong>
+                <span>{{ review.ethicalIssues ? t('reviewEvaluation.yes') : t('reviewEvaluation.no') }}</span>
+            </div>
+
+            <div v-if="hasRating" class="review-summary__rating">
+                <h4 class="review-summary__section-title">{{ t('reviewEvaluation.articleRatingTitle') }}</h4>
+                <table class="review-summary__rating-table">
+                    <tr v-for="(value, key) in review.articleRating" :key="key">
+                        <td class="review-summary__rating-label">{{ ratingLabels[key] || key }}</td>
+                        <td class="review-summary__rating-value">{{ ratingValueLabels[value] || value }}</td>
+                    </tr>
+                </table>
             </div>
 
             <div v-if="hasReviewFile" class="review-summary__file">
@@ -107,58 +186,6 @@ const hasComments = computed(() => !!props.review.commentsForAuthor);
     border-left: 3px solid var(--color-success);
 }
 
-.review-summary__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-sm);
-    flex-wrap: wrap;
-    gap: var(--spacing-xs);
-}
-
-.review-summary__reviewer-info {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    font-size: var(--type-caption-size);
-    color: var(--color-text-secondary);
-}
-
-.review-summary__reviewer-label {
-    font-weight: 500;
-}
-
-.review-summary__reviewer-name {
-    color: var(--color-text-primary);
-    font-weight: 500;
-}
-
-.review-summary__reviewer-anonymous {
-    color: var(--color-text-secondary);
-    font-style: italic;
-}
-
-.review-summary__status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--radius-sm);
-    font-size: var(--type-caption-size);
-    font-weight: 500;
-    white-space: nowrap;
-}
-
-.review-summary__status-badge--submitted {
-    background: rgba(46, 125, 50, 0.1);
-    color: var(--color-success);
-}
-
-.review-summary__status-badge--pending {
-    background: var(--color-surface);
-    color: var(--color-text-secondary);
-}
-
 .review-summary__body {
     display: flex;
     flex-direction: column;
@@ -194,6 +221,55 @@ const hasComments = computed(() => !!props.review.commentsForAuthor);
     white-space: pre-wrap;
     word-wrap: break-word;
     color: var(--color-text-primary);
+}
+
+.review-summary__section-title {
+    margin: 0 0 var(--spacing-xs);
+    font-size: var(--type-body-size);
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.review-summary__evaluation-table,
+.review-summary__rating-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--spacing-xs) 0;
+}
+
+.review-summary__evaluation-table td,
+.review-summary__rating-table td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-bottom: 1px solid var(--color-border);
+    font-size: var(--type-caption-size);
+}
+
+.review-summary__evaluation-table td:last-child,
+.review-summary__rating-table td:last-child {
+    text-align: center;
+    font-weight: 600;
+}
+
+.review-summary__evaluation-label,
+.review-summary__rating-label {
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    width: 70%;
+}
+
+.review-summary__evaluation-value,
+.review-summary__rating-value {
+    color: var(--color-text-primary);
+}
+
+.review-summary__field {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--type-caption-size);
+    background: var(--color-surface);
+    border-radius: var(--radius-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .review-summary__file {
@@ -244,10 +320,7 @@ const hasComments = computed(() => !!props.review.commentsForAuthor);
     gap: var(--spacing-xs);
     font-size: var(--type-caption-size);
     color: var(--color-text-secondary);
-}
-
-.review-summary__meta-label {
-    font-weight: 500;
+    justify-content: flex-end;
 }
 
 .review-summary__meta-value {

@@ -43,6 +43,16 @@ class Review(models.Model):
     review_file = models.FileField(upload_to=review_upload_path, null=True, blank=True)
     submitted_at = models.DateTimeField(null=True, blank=True)
 
+    evaluation_rating = models.JSONField(default=dict, blank=True)
+    
+    language_quality = models.CharField(max_length=32, blank=True)  # "excellent" | "needs_improvement"
+    
+    conflict_of_interest = models.BooleanField(null=True, blank=True)
+    plagiarism_detected = models.BooleanField(null=True, blank=True)
+    ethical_issues = models.BooleanField(null=True, blank=True)
+    
+    article_rating = models.JSONField(default=dict, blank=True)
+
     class Meta:
         db_table = "reviews"
         ordering = ["-deadline"]

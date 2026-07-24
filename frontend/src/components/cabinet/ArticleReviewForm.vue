@@ -4,6 +4,7 @@ import * as reviewsApi from "~/api/reviews";
 import { ApiError } from "~/api/http";
 import AppFormField from "~/components/AppFormField.vue";
 import AppFileField from "~/components/cabinet/AppFileField.vue";
+import ReviewEvaluationForm from "~/components/cabinet/ReviewEvaluationForm.vue";
 
 const props = defineProps<{
   reviewId: string;
@@ -23,6 +24,28 @@ const fieldErrors = ref<Record<string, string>>({});
 const formError = ref("");
 const isSubmitting = ref(false);
 
+const evaluationData = ref({
+  evaluationRating: {
+    introduction: "",
+    research_design: "",
+    methods: "",
+    results: "",
+    conclusions: "",
+    figures_tables: "",
+  },
+  languageQuality: "",
+  conflictOfInterest: null as boolean | null,
+  plagiarismDetected: null as boolean | null,
+  ethicalIssues: null as boolean | null,
+  articleRating: {
+    originality: "",
+    significance: "",
+    presentation: "",
+    scientific_validity: "",
+    reader_interest: "",
+  },
+});
+
 async function handleSubmit() {
   formError.value = "";
   fieldErrors.value = {};
@@ -40,8 +63,61 @@ async function handleSubmit() {
   try {
     await reviewsApi.submitReview(props.reviewId, {
       recommendation: recommendation.value,
-      formData: { commentsForAuthor: commentsForAuthor.value, commentsForEditor: commentsForEditor.value },
+      formData: {
+        commentsForAuthor: commentsForAuthor.value,
+        commentsForEditor: commentsForEditor.value,
+      },
       reviewFile: reviewFile.value ?? undefined,
+      evaluationRating: evaluationData.value.evaluationRating,
+      languageQuality: evaluationData.value.languageQuality,
+      conflictOfInterest: evaluationData.value.conflictOfInterest,
+      plagiarismDetected: evaluationData.value.plagiarismDetected,
+      ethicalIssues: evaluationData.value.ethicalIssues,
+      articleRating: evaluationData.value.articleRating,
+    });
+    emit("submitted");
+  } catch (err) {
+    formError.value = err instanceof ApiError ? err.message : t("reviewForm.error");
+  } finally {
+    isSubmitting.value = false;
+  }
+  
+  const requiredRatingFields = ["originality", "significance", "presentation", "scientific_validity", "reader_interest"];
+  for (const field of requiredRatingFields) {
+    if (!evaluationData.value.articleRating[field]) {
+      fieldErrors.value.rating = t("reviewForm.ratingRequired");
+      return;
+    }
+  }
+  
+  if (evaluationData.value.conflictOfInterest === null) {
+    fieldErrors.value.conflict = t("reviewForm.conflictRequired");
+    return;
+  }
+  if (evaluationData.value.plagiarismDetected === null) {
+    fieldErrors.value.plagiarism = t("reviewForm.plagiarismRequired");
+    return;
+  }
+  if (evaluationData.value.ethicalIssues === null) {
+    fieldErrors.value.ethical = t("reviewForm.ethicalRequired");
+    return;
+  }
+
+  isSubmitting.value = true;
+  try {
+    await reviewsApi.submitReview(props.reviewId, {
+      recommendation: recommendation.value,
+      formData: {
+        commentsForAuthor: commentsForAuthor.value,
+        commentsForEditor: commentsForEditor.value,
+      },
+      reviewFile: reviewFile.value ?? undefined,
+      evaluationRating: evaluationData.value.evaluationRating,
+      languageQuality: evaluationData.value.languageQuality,
+      conflictOfInterest: evaluationData.value.conflictOfInterest,
+      plagiarismDetected: evaluationData.value.plagiarismDetected,
+      ethicalIssues: evaluationData.value.ethicalIssues,
+      articleRating: evaluationData.value.articleRating,
     });
     emit("submitted");
   } catch (err) {
@@ -63,6 +139,12 @@ async function handleSubmit() {
 
     <template v-else>
       <h3>{{ t("reviewForm.title") }}</h3>
+
+      <ReviewEvaluationForm v-model="evaluationData" />
+
+      <p v-if="fieldErrors.evaluation" class="review-form__error" role="alert">
+        {{ fieldErrors.evaluation }}
+      </p>
 
       <div class="review-form__field">
         <label for="recommendation">{{ t("reviewForm.recommendationLabel") }}</label>

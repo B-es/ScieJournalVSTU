@@ -219,22 +219,6 @@
     "confidential": "Confidential — visible only to the reviewer and the editorial board",
     "download": "Download PDF"
   },
-  "reviewForm": {
-    "title": "Review form",
-    "recommendationLabel": "Recommendation",
-    "recommendationPlaceholder": "Select a recommendation",
-    "recommendation": {
-      "accept": "Accept",
-      "revise": "Needs revision",
-      "reject": "Reject"
-    },
-    "commentsForAuthor": "Comments for the author",
-    "commentsForEditor": "Comments for the editor (confidential)",
-    "reviewFile": "Review file (optional)",
-    "submit": "Submit review",
-    "alreadySubmitted": "Review submitted. Recommendation:",
-    "error": "Could not submit the review."
-  },
   "reviewPage": {
     "notFound": "Review not found"
   },
@@ -370,5 +354,64 @@
     "title": "Help & Support",
     "empty": "Usage instructions have not been published yet",
     "text": "### Contacts for Authors\n\nIf you have questions related to manuscript submission, article formatting, submission status, or publication conditions, you can contact the editorial office at the following contacts:\n\n- **Email**: [editorial address]\n- **Phone**: [contact phone number]\n\n### Contacts for Reviewers\n\nFor reviewers who need technical support when working in the review system or have questions about the procedure:\n\n- **Email**: [reviewer support address]\n\n### Technical Support\n\nFor website issues, personal account login, password recovery, and other technical problems:\n\n- **Email**: [technical support address]\n- **Instructions**: [link to system usage instructions]"
+  },
+  "reviewEvaluation": {
+    "evaluationTitle": "Article Evaluation",
+    "evaluationHint": "Evaluate the following aspects of the article, selecting one option for each item",
+    "parameter": "Parameter",
+    "yes": "Yes",
+    "canImprove": "Can be improved",
+    "required": "Requires improvement",
+    "notApplicable": "Not applicable",
+    
+    "introduction": "Does the introduction provide sufficient background information and contain all necessary references?",
+    "researchDesign": "Does the research design match the stated objectives?",
+    "methods": "Are the research methods adequately described?",
+    "results": "Are the results clearly presented?",
+    "conclusions": "Are the conclusions supported by the results?",
+    "figuresTables": "Are all figures and tables clear and well-designed?",
+    
+    "languageQuality": "Language Quality",
+    "languageExcellent": "The language is good and does not require editing",
+    "languageNeedsImprovement": "The language needs improvement for clarity",
+    
+    "conflictOfInterest": "Do you have a conflict of interest regarding this article?",
+    "plagiarismDetected": "Have signs of plagiarism been detected?",
+    "ethicalIssues": "Are there any other ethical issues in the research?",
+    
+    "articleRatingTitle": "Article Rating",
+    "criteria": "Criteria",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "noAnswer": "No answer",
+    
+    "originality": "Originality / novelty",
+    "significance": "Significance of content",
+    "presentation": "Quality of presentation",
+    "scientificValidity": "Scientific validity",
+    "readerInterest": "Reader interest"
+  },
+  
+  "reviewForm": {
+    "title": "Review Form",
+    "recommendationLabel": "Recommendation",
+    "recommendationPlaceholder": "Select a recommendation",
+    "recommendation": {
+      "accept": "Accept",
+      "revise": "Needs revision",
+      "reject": "Reject"
+    },
+    "commentsForAuthor": "Comments for the author",
+    "commentsForEditor": "Comments for the editor (confidential)",
+    "reviewFile": "Review file (optional)",
+    "submit": "Submit review",
+    "alreadySubmitted": "Review submitted. Recommendation:",
+    "error": "Could not submit the review.",
+    "evaluationRequired": "Please complete all evaluation items",
+    "ratingRequired": "Please complete all rating items",
+    "conflictRequired": "Please indicate conflict of interest status",
+    "plagiarismRequired": "Please indicate plagiarism detection status",
+    "ethicalRequired": "Please indicate ethical issues status"
   }
 }

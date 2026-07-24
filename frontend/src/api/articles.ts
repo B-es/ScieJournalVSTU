@@ -109,10 +109,15 @@ export interface ArticleReviewSummary {
   deadline: string;
   recommendation: "" | "accept" | "revise" | "reject";
   submittedAt: string | null;
-  /** Only this sub-field of the reviewer's form data — never commentsForEditor (M3e plan #5). */
   commentsForAuthor: string;
   reviewFileUrl?: string | null;
   reviewFileName?: string | null;
+  evaluationRating?: Record<string, string>;
+  languageQuality?: string;
+  conflictOfInterest?: boolean | null;
+  plagiarismDetected?: boolean | null;
+  ethicalIssues?: boolean | null;
+  articleRating?: Record<string, string>;
 }
 
 export interface ArticleDetailResponse {

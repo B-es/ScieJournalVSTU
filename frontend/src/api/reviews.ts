@@ -66,6 +66,12 @@ export interface SubmitReviewPayload {
   recommendation: "accept" | "revise" | "reject";
   formData: ReviewFormData;
   reviewFile?: File;
+  evaluationRating?: Record<string, string>;
+  languageQuality?: string;
+  conflictOfInterest?: boolean | null;
+  plagiarismDetected?: boolean | null;
+  ethicalIssues?: boolean | null;
+  articleRating?: Record<string, string>;
 }
 
 /** US-6: POST /api/reviews/{id}/submit. */
@@ -74,5 +80,28 @@ export function submitReview(reviewId: string, payload: SubmitReviewPayload) {
   form.append("recommendation", payload.recommendation);
   form.append("formData", JSON.stringify(payload.formData));
   if (payload.reviewFile) form.append("reviewFile", payload.reviewFile);
-  return apiFetch<{ status: string }>(`/reviews/${reviewId}/submit`, { method: "POST", body: form });
+  
+  if (payload.evaluationRating) {
+    form.append("evaluationRating", JSON.stringify(payload.evaluationRating));
+  }
+  if (payload.languageQuality) {
+    form.append("languageQuality", payload.languageQuality);
+  }
+  if (payload.conflictOfInterest !== undefined && payload.conflictOfInterest !== null) {
+    form.append("conflictOfInterest", String(payload.conflictOfInterest));
+  }
+  if (payload.plagiarismDetected !== undefined && payload.plagiarismDetected !== null) {
+    form.append("plagiarismDetected", String(payload.plagiarismDetected));
+  }
+  if (payload.ethicalIssues !== undefined && payload.ethicalIssues !== null) {
+    form.append("ethicalIssues", String(payload.ethicalIssues));
+  }
+  if (payload.articleRating) {
+    form.append("articleRating", JSON.stringify(payload.articleRating));
+  }
+  
+  return apiFetch<{ status: string }>(`/reviews/${reviewId}/submit`, { 
+    method: "POST", 
+    body: form 
+  });
 }

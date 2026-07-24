@@ -131,7 +131,19 @@ def reassign_reviewer(review: Review, new_reviewer_id, deadline, editor) -> Revi
     return review
 
 
-def submit_review(review: Review, user, recommendation: str, form_data: dict, review_file) -> Review:
+def submit_review(
+    review: Review, 
+    user, 
+    recommendation: str, 
+    form_data: dict, 
+    review_file,
+    evaluation_rating: dict = None,
+    language_quality: str = None,
+    conflict_of_interest: bool = None,
+    plagiarism_detected: bool = None,
+    ethical_issues: bool = None,
+    article_rating: dict = None
+) -> Review:
     """
     US-6: submit the review. Doesn't change Article.status — that only
     happens with the chief editor's final decision (US-7, not built yet).
@@ -149,8 +161,34 @@ def submit_review(review: Review, user, recommendation: str, form_data: dict, re
     review.review_form_data = form_data
     if review_file is not None:
         review.review_file = review_file
+    
+    # Сохраняем новые поля
+    if evaluation_rating is not None:
+        review.evaluation_rating = evaluation_rating
+    if language_quality is not None:
+        review.language_quality = language_quality
+    if conflict_of_interest is not None:
+        review.conflict_of_interest = conflict_of_interest
+    if plagiarism_detected is not None:
+        review.plagiarism_detected = plagiarism_detected
+    if ethical_issues is not None:
+        review.ethical_issues = ethical_issues
+    if article_rating is not None:
+        review.article_rating = article_rating
+    
     review.submitted_at = timezone.now()
-    review.save(update_fields=["recommendation", "review_form_data", "review_file", "submitted_at"])
+    review.save(update_fields=[
+        "recommendation", 
+        "review_form_data", 
+        "review_file", 
+        "submitted_at",
+        "evaluation_rating",
+        "language_quality",
+        "conflict_of_interest",
+        "plagiarism_detected",
+        "ethical_issues",
+        "article_rating"
+    ])
 
     article = review.article
     all_submitted = not article.reviews.filter(invitation_status=Review.ACCEPTED, submitted_at__isnull=True).exists()

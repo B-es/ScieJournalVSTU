@@ -104,11 +104,23 @@ class SubmitReviewView(APIView):
                 validated["recommendation"],
                 validated["formData"],
                 validated.get("reviewFile"),
+                evaluation_rating=validated.get("evaluationRating", {}),
+                language_quality=validated.get("languageQuality", ""),
+                conflict_of_interest=validated.get("conflictOfInterest"),
+                plagiarism_detected=validated.get("plagiarismDetected"),
+                ethical_issues=validated.get("ethicalIssues"),
+                article_rating=validated.get("articleRating", {}),
             )
         except PermissionError as exc:
-            return Response({"code": "forbidden", "message": str(exc)}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {"code": "forbidden", "message": str(exc)}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
         except ValueError as exc:
-            return Response({"code": "invalid_state", "message": str(exc)}, status=status.HTTP_409_CONFLICT)
+            return Response(
+                {"code": "invalid_state", "message": str(exc)}, 
+                status=status.HTTP_409_CONFLICT
+            )
 
         return Response({"status": "submitted"})
     

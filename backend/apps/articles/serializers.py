@@ -74,9 +74,22 @@ class ReviewSerializer(serializers.ModelSerializer):
     reviewFileUrl = serializers.SerializerMethodField()
     reviewFileName = serializers.SerializerMethodField()
 
+    evaluationRating = serializers.JSONField(source="evaluation_rating", read_only=True)
+    languageQuality = serializers.CharField(source="language_quality", read_only=True)
+    conflictOfInterest = serializers.BooleanField(source="conflict_of_interest", read_only=True)
+    plagiarismDetected = serializers.BooleanField(source="plagiarism_detected", read_only=True)
+    ethicalIssues = serializers.BooleanField(source="ethical_issues", read_only=True)
+    articleRating = serializers.JSONField(source="article_rating", read_only=True)
+
     class Meta:
         model = Review
-        fields = ["id", "reviewerId", "invitationStatus", "deadline", "recommendation", "submittedAt", "commentsForAuthor", "reviewFileUrl", "reviewFileName"]
+        fields = ["id", "reviewerId", "invitationStatus", "deadline", "recommendation", "submittedAt", "commentsForAuthor", "reviewFileUrl", "reviewFileName","evaluationRating",
+            "languageQuality",
+            "conflictOfInterest",
+            "plagiarismDetected",
+            "ethicalIssues",
+            "articleRating",
+        ]
 
     def get_commentsForAuthor(self, obj):
         if not obj.review_form_data:
