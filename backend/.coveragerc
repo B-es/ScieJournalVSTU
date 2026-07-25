@@ -1,0 +1,18 @@
+[run]
+source = apps
+omit =
+    apps/*/migrations/*
+    apps/*/admin.py
+    apps/*/apps.py
+    apps/*/urls.py
+    apps/*/views.py
+
+[report]
+show_missing = True
+skip_covered = True
+omit =
+    apps/*/migrations/*
+    apps/*/admin.py
+    apps/*/apps.py
+    apps/*/urls.py
+    apps/*/views.py
