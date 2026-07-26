@@ -155,7 +155,22 @@
     "acceptedNotice": "The article has been accepted for publication.",
     "publishedNotice": "The article has been published.",
     "doiLabel": "DOI",
-    "issueLabel": "Issue No."
+    "issueLabel": "Issue No.",
+    "metadata": "Metadata",
+    "pagesCount": "Pages count",
+    "createdAt": "Created at",
+    "submittedAt": "Submitted at",
+    "reviews": "Reviews",
+    "reviewsWaiting": "Waiting for reviews",
+    "reviewsWaitingHint": "Reviewers have not yet submitted their feedback",
+    "versions": "Versions",
+    "version": "Version",
+    "authorComment": "Author's comment",
+    "downloadManuscript": "Download manuscript",
+    "publishedAt": "Published at",
+    "unknownAuthor": "Unknown author",
+    "editor": "Editor",
+    "reviewerFeedback": "Reviewer feedback"
   },
   "articleRevision": {
     "title": "Upload a corrected version",
@@ -240,7 +255,12 @@
     "confirmRejectBody": "The article will be rejected and the author will be notified with your comment.",
     "confirmRejectButton": "Reject article",
     "cancel": "Cancel",
-    "error": "Could not submit the decision."
+    "error": "Could not submit the decision.",
+    "stage": {
+      "completeness_check": "Completeness check",
+      "topic_check": "Topic check",
+      "review_decision": "Review decision"
+    }
   },
   "reviewerFeedback": {
     "title": "Reviewer feedback"

@@ -230,7 +230,7 @@ onMounted(load);
 
                 <section v-if="submittedReviews.length" class="article-page__section article-page__reviews">
                     <h3 class="article-page__section-title">
-                        {{ t("Рецензии") }}
+                        {{ t("articlePage.reviews") }}
                     </h3>
                                         
                     <div class="article-page__reviews-list">

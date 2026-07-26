@@ -155,7 +155,22 @@
     "acceptedNotice": "Статья принята к публикации.",
     "publishedNotice": "Статья опубликована.",
     "doiLabel": "DOI",
-    "issueLabel": "Выпуск №"
+    "issueLabel": "Выпуск №",
+    "metadata": "Метаданные",
+    "pagesCount": "Количество страниц",
+    "createdAt": "Дата создания",
+    "submittedAt": "Дата подачи",
+    "reviews": "Рецензии",
+    "reviewsWaiting": "Ожидание рецензий",
+    "reviewsWaitingHint": "Рецензенты ещё не прислали свои отзывы",
+    "versions": "Версии",
+    "version": "Версия",
+    "authorComment": "Комментарий автора",
+    "downloadManuscript": "Скачать рукопись",
+    "publishedAt": "Дата публикации",
+    "unknownAuthor": "Неизвестный автор",
+    "editor": "Редактор",
+    "reviewerFeedback": "Отзывы рецензентов"
   },
   "articleRevision": {
     "title": "Загрузить исправленную версию",
@@ -240,7 +255,12 @@
     "confirmRejectBody": "Статья будет отклонена, автор получит уведомление с вашим комментарием.",
     "confirmRejectButton": "Отклонить статью",
     "cancel": "Отмена",
-    "error": "Не удалось отправить решение."
+    "error": "Не удалось отправить решение.",
+    "stage": {
+      "completeness_check": "Проверка комплектности",
+      "topic_check": "Проверка тематики",
+      "review_decision": "Решение по рецензиям"
+    }
   },
   "reviewerFeedback": {
     "title": "Отзывы рецензентов"
