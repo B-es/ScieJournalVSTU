@@ -10,6 +10,19 @@ from pathlib import Path
 
 import environ
 
+# Email settings
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"  # для разработки
+# Для продакшена заменить на SMTP:
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.yourprovider.com"
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = "your_email@domain.com"
+# EMAIL_HOST_PASSWORD = "your_password"
+DEFAULT_FROM_EMAIL = "noreply@yourjournal.com"  # заменить на реальный адрес
+
+FRONTEND_URL = "http://localhost:3000"  # заменить на реальный URL
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(DEBUG=(bool, False))

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Уведомление</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { border-bottom: 2px solid #1976d2; padding-bottom: 10px; }
+        .footer { margin-top: 30px; font-size: 12px; color: #777; border-top: 1px solid #ddd; padding-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>Научный журнал ВолгГТУ</h2>
+    </div>
+    <p>Здравствуйте, <strong>{{ user.full_name }}</strong>!</p>
+    <p>У вас новое уведомление на сайте журнала.</p>
+    <p><strong>Тип:</strong> {{ notification.get_type_display }}</p>
+    <p><strong>Сообщение:</strong> {{ notification.message }}</p>
+    <p><strong>Дата:</strong> {{ notification.created_at|date:"d.m.Y H:i" }}</p>
+
+    {% if notification.article %}
+        <p>
+            <strong>Статья:</strong>
+            {% if notification.article.status == 'published' %}
+                <a href="{{ site_url }}/article/{{ notification.article.id }}">прочитать статью</a>
+            {% else %}
+                <a href="{{ site_url }}/cabinet/notifications">подробнее в уведомлениях</a>
+            {% endif %}
+        </p>
+    {% endif %}
+
+    <p>
+        <a href="{{ site_url }}/cabinet/notifications">Перейти к списку уведомлений</a>
+    </p>
+
+    <div class="footer">
+        <p>Это автоматическое сообщение, пожалуйста, не отвечайте на него.</p>
+        <p>&copy; {{ now.year }} Научный журнал ВолгГТУ</p>
+    </div>
+</div>
+</body>
+</html>
